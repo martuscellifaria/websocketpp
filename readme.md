@@ -6,8 +6,8 @@ Note from the "Forker" Author
 **The official WebSocket++ hasn't got any updates since 2020**
 This is a personal fork and addresses a few outdated stuff, asio support and so on.
 I plan to maintain a bit here and there, but I have a full time job, so it may not
-be that easy. I want to try to port it to C++ 23 and ditch boost, and a few
-opinionated stuff here and there. This is too good to be deprecated.
+be that easy. I want to try to port it to C++ 23 and ditch boost, and put a few
+opinionated stuff here and there. This is too good to be deprecated any time soon.
 
 
 Official WebSocket++ readme
