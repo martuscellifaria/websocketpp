@@ -51,7 +51,8 @@
 #include <string>
 #include <vector>
 
-namespace websocketpp {
+namespace websocketpp
+{
 namespace transport {
 namespace asio {
 
@@ -86,11 +87,12 @@ public:
     typedef typename response_type::ptr response_ptr;
 
     /// Type of a pointer to the Asio io_service being used
-    typedef lib::asio::io_service * io_service_ptr;
+    typedef lib::asio::io_context* io_service_ptr;
     /// Type of a pointer to the Asio io_service::strand being used
-    typedef lib::shared_ptr<lib::asio::io_service::strand> strand_ptr;
+    typedef lib::shared_ptr<lib::asio::io_context::strand> strand_ptr;
     /// Type of a pointer to the Asio timer class
     typedef lib::shared_ptr<lib::asio::steady_timer> timer_ptr;
+    using clk = lib::chrono::steady_clock;
 
     // connection is friends with its associated endpoint to allow the endpoint
     // to call private/protected utility methods that we don't want to expose
@@ -194,12 +196,14 @@ public:
         ec = lib::error_code();
     }
 
+#ifndef _WEBSOCKETPP_NO_EXCEPTIONS_
     /// Set the proxy to connect through (exception)
     void set_proxy(std::string const & uri) {
         lib::error_code ec;
         set_proxy(uri,ec);
         if (ec) { throw exception(ec); }
     }
+#endif // _WEBSOCKETPP_NO_EXCEPTIONS_
 
     /// Set the basic auth credentials to use (exception free)
     /**
@@ -228,6 +232,7 @@ public:
         ec = lib::error_code();
     }
 
+#ifndef _WEBSOCKETPP_NO_EXCEPTIONS_
     /// Set the basic auth credentials to use (exception)
     void set_proxy_basic_auth(std::string const & username, std::string const &
         password)
@@ -236,6 +241,7 @@ public:
         set_proxy_basic_auth(username,password,ec);
         if (ec) { throw exception(ec); }
     }
+#endif // _WEBSOCKETPP_NO_EXCEPTIONS_
 
     /// Set the proxy timeout duration (exception free)
     /**
@@ -257,12 +263,14 @@ public:
         ec = lib::error_code();
     }
 
+#ifndef _WEBSOCKETPP_NO_EXCEPTIONS_
     /// Set the proxy timeout duration (exception)
     void set_proxy_timeout(long duration) {
         lib::error_code ec;
         set_proxy_timeout(duration,ec);
         if (ec) { throw exception(ec); }
     }
+#endif // _WEBSOCKETPP_NO_EXCEPTIONS_
 
     std::string const & get_proxy() const {
         return m_proxy;
@@ -317,7 +325,7 @@ public:
                 lib::asio::milliseconds(duration))
         );
 
-        if (config::enable_multithreading) {
+        if constexpr(config::enable_multithreading) {
             new_timer->async_wait(m_strand->wrap(lib::bind(
                 &type::handle_timer, get_shared(),
                 new_timer,
@@ -374,7 +382,7 @@ public:
      * fail handler is called.
      *
      * Primarily used if you are using mismatched asio / system_error
-     * implementations such as `boost::asio` with `std::system_error`. In these
+     * implementations such as `asio` with `std::system_error`. In these
      * cases the transport error type is different than the library error type
      * and some WebSocket++ functions that return transport errors via the 
      * library error code type will be coerced into a catch all `pass_through`
@@ -461,8 +469,8 @@ protected:
     lib::error_code init_asio (io_service_ptr io_service) {
         m_io_service = io_service;
 
-        if (config::enable_multithreading) {
-            m_strand.reset(new lib::asio::io_service::strand(*io_service));
+        if constexpr(config::enable_multithreading) {
+          m_strand.reset(new lib::asio::io_context::strand(*io_service));
         }
 
         lib::error_code ec = socket_con_type::init_asio(io_service, m_strand,
@@ -572,12 +580,12 @@ protected:
     void handle_post_init(timer_ptr post_timer, init_handler callback,
         lib::error_code const & ec)
     {
-        if (ec == transport::error::operation_aborted ||
-            (post_timer && lib::asio::is_neg(post_timer->expires_from_now())))
-        {
-            m_alog->write(log::alevel::devel,"post_init cancelled");
-            return;
-        }
+      if(ec == transport::error::operation_aborted
+         || (post_timer && lib::asio::is_neg(post_timer->expiry() - clk::now())))
+      {
+        m_alog->write(log::alevel::devel, "post_init cancelled");
+        return;
+      }
 
         if (post_timer) {
             post_timer->cancel();
@@ -625,7 +633,7 @@ protected:
         );
 
         // Send proxy request
-        if (config::enable_multithreading) {
+        if constexpr(config::enable_multithreading) {
             lib::asio::async_write(
                 socket_con_type::get_next_layer(),
                 m_bufs,
@@ -678,8 +686,8 @@ protected:
         // Timer expired or the operation was aborted for some reason.
         // Whatever aborted it will be issuing the callback so we are safe to
         // return
-        if (ec == lib::asio::error::operation_aborted ||
-            lib::asio::is_neg(m_proxy_data->timer->expires_from_now()))
+        if(ec == lib::asio::error::operation_aborted
+           || lib::asio::is_neg(m_proxy_data->timer->expiry().time_since_epoch()))
         {
             m_elog->write(log::elevel::devel,"write operation aborted");
             return;
@@ -703,12 +711,11 @@ protected:
         if (!m_proxy_data) {
             m_elog->write(log::elevel::library,
                 "assertion failed: !m_proxy_data in asio::connection::proxy_read");
-            m_proxy_data->timer->cancel();
             callback(make_error_code(error::general));
             return;
         }
 
-        if (config::enable_multithreading) {
+        if constexpr(config::enable_multithreading) {
             lib::asio::async_read_until(
                 socket_con_type::get_next_layer(),
                 m_proxy_data->read_buf,
@@ -750,8 +757,8 @@ protected:
         // Timer expired or the operation was aborted for some reason.
         // Whatever aborted it will be issuing the callback so we are safe to
         // return
-        if (ec == lib::asio::error::operation_aborted ||
-            lib::asio::is_neg(m_proxy_data->timer->expires_from_now()))
+        if(ec == lib::asio::error::operation_aborted
+           || lib::asio::is_neg(m_proxy_data->timer->expiry() - clk::now()))
         {
             m_elog->write(log::elevel::devel,"read operation aborted");
             return;
@@ -772,9 +779,19 @@ protected:
                 return;
             }
 
+            // todo: switch this to using non-istream based consume
             std::istream input(&m_proxy_data->read_buf);
 
-            m_proxy_data->res.consume(input);
+            lib::error_code istream_ec;
+            m_proxy_data->res.consume(input, istream_ec);
+            if (istream_ec) {
+                // there was an error while reading from the proxy
+                m_elog->write(log::elevel::info,
+                    "An HTTP handling error occurred while reading a response from the proxy server: "+istream_ec.message());
+                // todo: do we need to translate this error?
+                callback(istream_ec);
+                return;
+            }
 
             if (!m_proxy_data->res.headers_ready()) {
                 // we read until the headers were done in theory but apparently
@@ -836,7 +853,7 @@ protected:
             return;
         }*/
 
-        if (config::enable_multithreading) {
+        if constexpr(config::enable_multithreading) {
             lib::asio::async_read(
                 socket_con_type::get_socket(),
                 lib::asio::buffer(buf,len),
@@ -906,7 +923,7 @@ protected:
     void async_write(const char* buf, size_t len, write_handler handler) {
         m_bufs.push_back(lib::asio::buffer(buf,len));
 
-        if (config::enable_multithreading) {
+        if constexpr(config::enable_multithreading) {
             lib::asio::async_write(
                 socket_con_type::get_socket(),
                 m_bufs,
@@ -939,11 +956,14 @@ protected:
     void async_write(std::vector<buffer> const & bufs, write_handler handler) {
         std::vector<buffer>::const_iterator it;
 
+        // todo: check if this underlying socket supports efficient scatter/gather io
+        // if not, coalesce buffers before we send to the underlying transport.
+
         for (it = bufs.begin(); it != bufs.end(); ++it) {
             m_bufs.push_back(lib::asio::buffer((*it).buf,(*it).len));
         }
 
-        if (config::enable_multithreading) {
+        if constexpr(config::enable_multithreading) {
             lib::asio::async_write(
                 socket_con_type::get_socket(),
                 m_bufs,
@@ -1011,19 +1031,19 @@ protected:
      * This needs to be thread safe
      */
     lib::error_code interrupt(interrupt_handler handler) {
-        if (config::enable_multithreading) {
-            m_io_service->post(m_strand->wrap(handler));
+        if constexpr(config::enable_multithreading) {
+          lib::asio::post(*m_io_service, m_strand->wrap(handler));
         } else {
-            m_io_service->post(handler);
+          lib::asio::post(*m_io_service, handler);
         }
         return lib::error_code();
     }
 
     lib::error_code dispatch(dispatch_handler handler) {
-        if (config::enable_multithreading) {
-            m_io_service->post(m_strand->wrap(handler));
+        if constexpr(config::enable_multithreading) {
+          lib::asio::post(*m_io_service, m_strand->wrap(handler));
         } else {
-            m_io_service->post(handler);
+          lib::asio::post(*m_io_service, handler);
         }
         return lib::error_code();
     }
@@ -1094,11 +1114,11 @@ protected:
     void handle_async_shutdown(timer_ptr shutdown_timer, shutdown_handler
         callback, lib::asio::error_code const & ec)
     {
-        if (ec == lib::asio::error::operation_aborted ||
-            lib::asio::is_neg(shutdown_timer->expires_from_now()))
-        {
-            m_alog->write(log::alevel::devel,"async_shutdown cancelled");
-            return;
+      if(ec == lib::asio::error::operation_aborted
+         || lib::asio::is_neg(shutdown_timer->expiry() - clk::now()))
+      {
+        m_alog->write(log::alevel::devel, "async_shutdown cancelled");
+        return;
         }
 
         shutdown_timer->cancel();

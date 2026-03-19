@@ -1,5 +1,11 @@
 HEAD
 
+0.8.2.1 - 2026-03-19
+- This is kind of a "fix" I did, since this is a library a bunch of people
+  were using. The lib is compatible with newer versions of asio in the state
+  of march of 2026. I also ditched the use of boost on unnecessary stuff like
+  type_traits and random.
+
 0.8.2 - 2020-04-19
 - Examples: Update print_client_tls example to remove use of deprecated
   OpenSSL functions.
