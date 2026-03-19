@@ -1,6 +1,17 @@
-WebSocket++ (0.8.2)
+WebSocket++ (0.8.2.1)
 ==========================
 
+Note from the "Forker" Author
+=================================
+**The official WebSocket++ hasn't got any updates since 2020**
+This is a personal fork and addresses a few outdated stuff, asio support and so on.
+I plan to maintain a bit here and there, but I have a full time job, so it may not
+be that easy. I want to try to port it to C++ 23 and ditch boost, and a few
+opinionated stuff here and there. This is too good to be deprecated.
+
+
+Official WebSocket++ readme
+==============================
 WebSocket++ is a header only C++ library that implements RFC6455 The WebSocket
 Protocol. It allows integrating WebSocket client and server functionality into
 C++ programs. It uses interchangeable network transport modules including one
@@ -30,19 +41,8 @@ http://www.zaphoyd.com/websocketpp/
 **User Manual**
 http://docs.websocketpp.org/
 
-**GitHub Repository**
+**Parent GitHub Repository**
 https://github.com/zaphoyd/websocketpp/
-
-GitHub pull requests should be submitted to the `develop` branch.
-
-**Announcements Mailing List**
-http://groups.google.com/group/websocketpp-announcements/
-
-**IRC Channel**
- #websocketpp (freenode)
-
-**Discussion / Development / Support Mailing List / Forum**
-http://groups.google.com/group/websocketpp/
 
 Author
 ======
