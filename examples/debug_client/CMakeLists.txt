@@ -8,7 +8,7 @@ init_target (debug_client)
 
 build_executable (${TARGET_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 
-link_boost ()
+
 link_openssl()
 final_target ()
 

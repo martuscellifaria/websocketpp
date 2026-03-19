@@ -6,7 +6,7 @@ init_target (test_logger)
 
 build_test (${TARGET_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 
-link_boost ()
+
 final_target ()
 
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "test")

@@ -128,7 +128,6 @@ if (BUILD_TESTS OR BUILD_EXAMPLES)
             set (WEBSOCKETPP_PLATFORM_LIBS pthread)
         endif()
         set (WEBSOCKETPP_PLATFORM_TLS_LIBS ssl crypto)
-        # set (WEBSOCKETPP_BOOST_LIBS system thread)
         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
         if (NOT APPLE)
             add_definitions (-DNDEBUG -Wall -Wcast-align) # todo: should we use CMAKE_C_FLAGS for these?
@@ -161,11 +160,9 @@ if (BUILD_TESTS OR BUILD_EXAMPLES)
     endif ()
 
     if (BUILD_EXAMPLES)
-        # list (APPEND WEBSOCKETPP_BOOST_LIBS random)
     endif()
 
     if (BUILD_TESTS)
-        # list (APPEND WEBSOCKETPP_BOOST_LIBS unit_test_framework)
     endif()
 
     ############ Dependencies
