@@ -14,7 +14,7 @@ using websocketpp::lib::placeholders::_2;
 using websocketpp::lib::bind;
 
 // type of the ssl context pointer is long so alias it
-typedef websocketpp::lib::shared_ptr<boost::asio::ssl::context> context_ptr;
+typedef websocketpp::lib::shared_ptr<asio::ssl::context> context_ptr;
 
 // The shared on_message handler takes a template parameter so the function can
 // resolve any endpoint dependent types like message_ptr or connection_ptr
@@ -41,16 +41,16 @@ std::string get_password() {
 
 context_ptr on_tls_init(websocketpp::connection_hdl hdl) {
     std::cout << "on_tls_init called with hdl: " << hdl.lock().get() << std::endl;
-    context_ptr ctx(new boost::asio::ssl::context(boost::asio::ssl::context::tlsv1));
+    context_ptr ctx(new asio::ssl::context(asio::ssl::context::tlsv1));
 
     try {
-        ctx->set_options(boost::asio::ssl::context::default_workarounds |
-                         boost::asio::ssl::context::no_sslv2 |
-                         boost::asio::ssl::context::no_sslv3 |
-                         boost::asio::ssl::context::single_dh_use);
+        ctx->set_options(asio::ssl::context::default_workarounds |
+                         asio::ssl::context::no_sslv2 |
+                         asio::ssl::context::no_sslv3 |
+                         asio::ssl::context::single_dh_use);
         ctx->set_password_callback(bind(&get_password));
         ctx->use_certificate_chain_file("server.pem");
-        ctx->use_private_key_file("server.pem", boost::asio::ssl::context::pem);
+        ctx->use_private_key_file("server.pem", asio::ssl::context::pem);
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
     }
@@ -60,7 +60,7 @@ context_ptr on_tls_init(websocketpp::connection_hdl hdl) {
 int main() {
     // set up an external io_service to run both endpoints on. This is not
     // strictly necessary, but simplifies thread management a bit.
-    boost::asio::io_service ios;
+    asio::io_service ios;
 
     // set up plain endpoint
     server_plain endpoint_plain;

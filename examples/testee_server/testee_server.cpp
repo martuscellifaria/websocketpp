@@ -87,8 +87,8 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
     s->send(hdl, msg->get_payload(), msg->get_opcode());
 }
 
-void on_socket_init(websocketpp::connection_hdl, boost::asio::ip::tcp::socket & s) {
-    boost::asio::ip::tcp::no_delay option(true);
+void on_socket_init(websocketpp::connection_hdl, asio::ip::tcp::socket & s) {
+    asio::ip::tcp::no_delay option(true);
     s.set_option(option);
 }
 
