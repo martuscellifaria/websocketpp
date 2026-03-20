@@ -263,14 +263,15 @@ protected:
 
         // TLS handshake
         if (m_strand) {
-            m_socket->async_handshake(
-                get_handshake_type(),
-                m_strand->wrap(lib::bind(
-                    &type::handle_init, get_shared(),
-                    callback,
-                    lib::placeholders::_1
-                ))
-            );
+	    m_socket->async_handshake(
+		get_handshake_type(),
+		lib::asio::bind_executor(
+		    *m_strand,
+		    [self = get_shared(), cb = callback](const std::error_code& ec) {
+			self->handle_init(cb, ec);
+		    }
+		)
+	    );
         } else {
             m_socket->async_handshake(
                 get_handshake_type(),
@@ -313,8 +314,6 @@ protected:
      * Attempts to cancel all async operations on this socket and reports any
      * failures.
      *
-     * NOTE: Windows XP and earlier do not support socket cancellation.
-     *
      * @return The error that occurred, if any.
      */
     lib::asio::error_code cancel_socket() {
@@ -325,7 +324,14 @@ protected:
 
     void async_shutdown(socket::shutdown_handler callback) {
         if (m_strand) {
-            m_socket->async_shutdown(m_strand->wrap(callback));
+	    m_socket->async_shutdown(
+		lib::asio::bind_executor(
+		    *m_strand,
+		    [cb = callback](const std::error_code& ec) {
+			cb(ec);
+		    }
+		)
+	    );
         } else {
             m_socket->async_shutdown(callback);
         }
@@ -335,12 +341,9 @@ public:
     /// Translate any security policy specific information about an error code
     /**
      * Translate_ec takes an Asio error code and attempts to convert its value
-     * to an appropriate websocketpp error code. In the case that the Asio and
-     * Websocketpp error types are the same (such as using boost::asio and
-     * boost::system_error or using standalone asio and std::system_error the
-     * code will be passed through natively.
+     * to an appropriate websocketpp error code.
      *
-     * In the case of a mismatch (boost::asio with std::system_error) a
+     * In the case of a mismatch (asio with std::system_error) a
      * translated code will be returned. Any error that is determined to be
      * related to TLS but does not have a more specific websocketpp error code
      * is returned under the catch all error `tls_error`. Non-TLS related errors

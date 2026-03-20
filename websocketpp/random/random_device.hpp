@@ -32,7 +32,6 @@
 
 namespace websocketpp {
 namespace random {
-/// RNG policy based on std::random_device or boost::random_device
 namespace random_device {
 
 /// Thread safe non-deterministic random integer generator.
@@ -45,8 +44,6 @@ namespace random_device {
  * parameter.
  *
  * Non-deterministic RNG is provided via websocketpp::lib which uses either
- * C++11 or Boost 1.47+'s random_device class.
- *
  * Call operator() to generate the next number
  */
 template <typename int_type, typename concurrency>
@@ -56,7 +53,6 @@ class int_generator {
         typedef typename concurrency::mutex_type mutex_type;
 
         /// constructor
-        //mac TODO: figure out if signed types present a range problem
         int_generator() {}
 
         /// advances the engine's state and returns the generated value

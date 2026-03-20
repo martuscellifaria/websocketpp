@@ -73,24 +73,6 @@ namespace config {
  * supply at least a transport policy for a config based on `minimal_server` to
  * do anything useful.
  *
- * Present dependency list for minimal_server config:
- *
- * C++98 STL:
- * <algorithm>
- * <map>
- * <sstream>
- * <string>
- * <vector>
- *
- * C++11 STL or Boost
- * <memory>
- * <functional>
- * <system_error>
- *
- * Operating System:
- * <stdint.h> or <boost/cstdint.hpp>
- * <netinet/in.h> or <winsock2.h> (for ntohl.. could potentially bundle this)
- *
  * @since 0.4.0-dev
  */
 struct minimal_server {

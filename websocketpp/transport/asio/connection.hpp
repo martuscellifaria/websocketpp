@@ -28,6 +28,7 @@
 #ifndef WEBSOCKETPP_TRANSPORT_ASIO_CON_HPP
 #define WEBSOCKETPP_TRANSPORT_ASIO_CON_HPP
 
+#include <cstddef>
 #include <websocketpp/transport/asio/base.hpp>
 
 #include <websocketpp/transport/base/connection.hpp>
@@ -324,23 +325,18 @@ public:
                 *m_io_service,
                 lib::asio::milliseconds(duration))
         );
-
-        if constexpr(config::enable_multithreading) {
-            new_timer->async_wait(m_strand->wrap(lib::bind(
-                &type::handle_timer, get_shared(),
-                new_timer,
-                callback,
-                lib::placeholders::_1
-            )));
-        } else {
-            new_timer->async_wait(lib::bind(
-                &type::handle_timer, get_shared(),
-                new_timer,
-                callback,
-                lib::placeholders::_1
-            ));
-        }
-
+	if constexpr(config::enable_multithreading) {
+	    new_timer->async_wait(lib::asio::bind_executor(
+		*m_strand,
+		[self = get_shared(), timer = new_timer, cb = callback](const std::error_code& ec) {
+		    self->handle_timer(timer, cb, ec);
+		}
+	    ));
+	} else {
+	    new_timer->async_wait([self = get_shared(), timer = new_timer, cb = callback](const std::error_code& ec) {
+		self->handle_timer(timer, cb, ec);
+	    });
+	}
         return new_timer;
     }
 
@@ -634,15 +630,15 @@ protected:
 
         // Send proxy request
         if constexpr(config::enable_multithreading) {
-            lib::asio::async_write(
-                socket_con_type::get_next_layer(),
-                m_bufs,
-                m_strand->wrap(lib::bind(
-                    &type::handle_proxy_write, get_shared(),
-                    callback,
-                    lib::placeholders::_1
-                ))
-            );
+	    lib::asio::async_write(
+		socket_con_type::get_next_layer(),
+		m_bufs,
+		lib::asio::bind_executor(
+		*m_strand,
+		[self = get_shared(), cb = callback](const std::error_code& ec, size_t bytes_transferred) {
+		    self->handle_proxy_write(cb, ec);
+		}
+	    ));
         } else {
             lib::asio::async_write(
                 socket_con_type::get_next_layer(),
@@ -720,12 +716,12 @@ protected:
                 socket_con_type::get_next_layer(),
                 m_proxy_data->read_buf,
                 "\r\n\r\n",
-                m_strand->wrap(lib::bind(
-                    &type::handle_proxy_read, get_shared(),
-                    callback,
-                    lib::placeholders::_1, lib::placeholders::_2
-                ))
-            );
+		lib::asio::bind_executor(
+		*m_strand,
+		[self = get_shared(), cb = callback](const std::error_code& ec, size_t bytes_transferred) {
+		    self->handle_proxy_read(cb, ec, bytes_transferred);
+		}
+	    ));
         } else {
             lib::asio::async_read_until(
                 socket_con_type::get_next_layer(),
@@ -854,19 +850,20 @@ protected:
         }*/
 
         if constexpr(config::enable_multithreading) {
-            lib::asio::async_read(
-                socket_con_type::get_socket(),
-                lib::asio::buffer(buf,len),
-                lib::asio::transfer_at_least(num_bytes),
-                m_strand->wrap(make_custom_alloc_handler(
-                    m_read_handler_allocator,
-                    lib::bind(
-                        &type::handle_async_read, get_shared(),
-                        handler,
-                        lib::placeholders::_1, lib::placeholders::_2
-                    )
-                ))
-            );
+	    lib::asio::async_read(
+		socket_con_type::get_socket(),
+		lib::asio::buffer(buf, len),
+		lib::asio::transfer_at_least(num_bytes),
+		lib::asio::bind_executor(
+		    *m_strand,
+		    make_custom_alloc_handler(
+			m_read_handler_allocator,
+			[self = get_shared(), h = handler](const std::error_code& ec, size_t bytes_transferred) {
+			    self->handle_async_read(h, ec, bytes_transferred);
+			}
+		    )
+		)
+	    );
         } else {
             lib::asio::async_read(
                 socket_con_type::get_socket(),
@@ -924,18 +921,19 @@ protected:
         m_bufs.push_back(lib::asio::buffer(buf,len));
 
         if constexpr(config::enable_multithreading) {
-            lib::asio::async_write(
-                socket_con_type::get_socket(),
-                m_bufs,
-                m_strand->wrap(make_custom_alloc_handler(
-                    m_write_handler_allocator,
-                    lib::bind(
-                        &type::handle_async_write, get_shared(),
-                        handler,
-                        lib::placeholders::_1, lib::placeholders::_2
-                    )
-                ))
-            );
+	    lib::asio::async_write(
+		socket_con_type::get_socket(),
+		m_bufs,
+		lib::asio::bind_executor(
+		    *m_strand,
+		    make_custom_alloc_handler(
+			m_write_handler_allocator,
+			    [self = get_shared(), h = handler](const std::error_code& ec, size_t bytes_transferred) {
+				    self->handle_async_write(h, ec, bytes_transferred);
+			}
+		    )
+		)
+	    );
         } else {
             lib::asio::async_write(
                 socket_con_type::get_socket(),
@@ -964,18 +962,19 @@ protected:
         }
 
         if constexpr(config::enable_multithreading) {
-            lib::asio::async_write(
-                socket_con_type::get_socket(),
-                m_bufs,
-                m_strand->wrap(make_custom_alloc_handler(
-                    m_write_handler_allocator,
-                    lib::bind(
-                        &type::handle_async_write, get_shared(),
-                        handler,
-                        lib::placeholders::_1, lib::placeholders::_2
-                    )
-                ))
-            );
+	    lib::asio::async_write(
+		socket_con_type::get_socket(),
+		m_bufs,
+		lib::asio::bind_executor(
+		    *m_strand,
+		    make_custom_alloc_handler(
+			m_write_handler_allocator,
+			[self = get_shared(), h = handler](const std::error_code& ec, size_t bytes_transferred) {
+			    self->handle_async_write(h, ec, bytes_transferred);
+			}
+		    )
+		)
+	    );
         } else {
             lib::asio::async_write(
                 socket_con_type::get_socket(),
@@ -1032,7 +1031,14 @@ protected:
      */
     lib::error_code interrupt(interrupt_handler handler) {
         if constexpr(config::enable_multithreading) {
-          lib::asio::post(*m_io_service, m_strand->wrap(handler));
+	    lib::asio::post(*m_io_service,
+		lib::asio::bind_executor(
+		    *m_strand,
+		    [h = handler]() {
+			h();
+		    }
+		)
+	    );
         } else {
           lib::asio::post(*m_io_service, handler);
         }
@@ -1041,7 +1047,14 @@ protected:
 
     lib::error_code dispatch(dispatch_handler handler) {
         if constexpr(config::enable_multithreading) {
-          lib::asio::post(*m_io_service, m_strand->wrap(handler));
+	    lib::asio::post(*m_io_service,
+		lib::asio::bind_executor(
+		    *m_strand,
+		    [h = handler]() {
+			h();
+		    }
+		)
+	    );
         } else {
           lib::asio::post(*m_io_service, handler);
         }

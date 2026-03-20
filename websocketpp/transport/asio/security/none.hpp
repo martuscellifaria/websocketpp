@@ -266,14 +266,7 @@ public:
     /**
      * Translate_ec takes an Asio error code and attempts to convert its value 
      * to an appropriate websocketpp error code. In the case that the Asio and
-     * Websocketpp error types are the same (such as using boost::asio and
-     * boost::system_error or using standalone asio and std::system_error the
-     * code will be passed through natively.
-     *
-     * In the case of a mismatch (boost::asio with std::system_error) a
-     * translated code will be returned. The plain socket policy does not have 
-     * any additional information so all such errors will be reported as the
-     * generic transport pass_through error.
+     * Websocketpp error types are the same
      *
      * @since 0.3.0
      *
@@ -313,7 +306,7 @@ private:
 /// Basic ASIO endpoint socket component
 /**
  * transport::asio::basic_socket::endpoint implements an endpoint socket
- * component that uses Boost ASIO's ip::tcp::socket.
+ * component that uses ASIO's ip::tcp::socket.
  */
 class endpoint {
 public:

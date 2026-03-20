@@ -809,15 +809,15 @@ public:
         m_alog->write(log::alevel::devel, "asio::async_accept");
 
         if constexpr(config::enable_multithreading) {
-            m_acceptor->async_accept(
-                tcon->get_raw_socket(),
-                tcon->get_strand()->wrap(lib::bind(
-                    &type::handle_accept,
-                    this,
-                    callback,
-                    lib::placeholders::_1
-                ))
-            );
+	    m_acceptor->async_accept(
+		tcon->get_raw_socket(),
+		lib::asio::bind_executor(
+		    *tcon->get_strand(),
+		    [this, cb = callback](const std::error_code& ec) {
+			this->handle_accept(cb, ec);
+		    }
+		)
+	    );
         } else {
             m_acceptor->async_accept(
                 tcon->get_raw_socket(),
@@ -938,18 +938,16 @@ protected:
         );
 
         if constexpr (config::enable_multithreading) {
-            m_resolver->async_resolve(
-                query.host_name(), query.service_name(),
-                tcon->get_strand()->wrap(lib::bind(
-                    &type::handle_resolve,
-                    this,
-                    tcon,
-                    dns_timer,
-                    cb,
-                    lib::placeholders::_1,
-                    lib::placeholders::_2
-                ))
-            );
+	    m_resolver->async_resolve(
+		query.host_name(), 
+		query.service_name(),
+		lib::asio::bind_executor(
+		    *tcon->get_strand(),
+		    [this, tcon, dns_timer, cb = cb](const std::error_code& ec, const lib::asio::ip::tcp::resolver::results_type& results) {
+			this->handle_resolve(tcon, dns_timer, cb, ec, results);
+		    }
+		)
+	    );
         } else {
             m_resolver->async_resolve(
               query.host_name(), query.service_name(),
@@ -1045,18 +1043,16 @@ protected:
         );
 
         if constexpr(config::enable_multithreading) {
-            lib::asio::async_connect(
-                tcon->get_raw_socket(),
-                iterator,
-                tcon->get_strand()->wrap(lib::bind(
-                    &type::handle_connect,
-                    this,
-                    tcon,
-                    con_timer,
-                    callback,
-                    lib::placeholders::_1
-                ))
-            );
+	    lib::asio::async_connect(
+		tcon->get_raw_socket(),
+		iterator,
+		lib::asio::bind_executor(
+		    *tcon->get_strand(),
+		    [this, tcon, con_timer, cb = callback](const std::error_code& ec, const auto& endpoint_iterator) {
+			this->handle_connect(tcon, con_timer, cb, ec);
+		    }
+		)
+	    );
         } else {
             lib::asio::async_connect(
                 tcon->get_raw_socket(),
