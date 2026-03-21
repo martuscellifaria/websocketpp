@@ -416,19 +416,21 @@ public:
 private:
     void decode_client_key(std::string const & key, char * result) const {
         unsigned int spaces = 0;
-        std::string digits;
+        std::string digits = "";
         uint32_t num;
 
         // key2
-        for (size_t i = 0; i < key.size(); i++) {
-            if (key[i] == ' ') {
-                spaces++;
-            } else if (key[i] >= '0' && key[i] <= '9') {
-                digits += key[i];
+	for (const auto& ch : key) {
+	    if (ch == ' ') {
+		spaces++;
+		continue;
+	    }
+            if (ch >= '0' && ch <= '9') {
+                digits += ch;
             }
-        }
+	}
 
-        num = static_cast<uint32_t>(strtoul(digits.c_str(), NULL, 10));
+        num = static_cast<uint32_t>(strtoul(digits.c_str(), nullptr, 10));
         if (spaces > 0 && num > 0) {
             num = htonl(num/spaces);
             std::copy(reinterpret_cast<char*>(&num),

@@ -11,8 +11,9 @@ using websocketpp::lib::placeholders::_2;
 using websocketpp::lib::bind;
 using websocketpp::lib::ref;
 
-void custom_on_msg(server & s, connection_hdl hdl, server::message_ptr msg) {
-        std::cout << "Message sent to custom handler" << std::endl;
+void custom_on_msg([[maybe_unused]] server & s, [[maybe_unused]] connection_hdl hdl, [[maybe_unused]] server::message_ptr msg) {
+
+    std::cout << "Message sent to custom handler" << std::endl;
 }
 
 void default_on_msg(server & s, connection_hdl hdl, server::message_ptr msg) {

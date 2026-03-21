@@ -70,12 +70,11 @@ set(CMAKE_CONFIGURATION_TYPES "Release;RelWithDebInfo;Debug" CACHE STRING "Confi
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(CMakeHelpers)
 
-
+add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 ############  Build customization
 
 # Override from command line "CMake -D<OPTION>=TRUE/FALSE/0/1/ON/OFF"
-option(ENABLE_CPP11 "Build websocketpp with CPP11 features enabled." TRUE)
-option(BUILD_EXAMPLES "Build websocketpp examples." FALSE)
+option(BUILD_EXAMPLES "Build websocketpp examples." TRUE)
 option(BUILD_TESTS "Build websocketpp tests." FALSE)
 
 if(BUILD_TESTS OR BUILD_EXAMPLES)
@@ -86,85 +85,6 @@ if(BUILD_TESTS OR BUILD_EXAMPLES)
 
     set(WEBSOCKETPP_PLATFORM_LIBS "")
     set(WEBSOCKETPP_PLATFORM_TLS_LIBS "")
-
-    # VC9 and C++11 reasoning
-    if(ENABLE_CPP11 AND MSVC AND MSVC90)
-        message("* Detected Visual Studio 9 2008, disabling C++11 support.")
-        set(ENABLE_CPP11 FALSE)
-    endif()
-
-    # Detect clang. Not officially reported by cmake.
-    execute_process(COMMAND "${CMAKE_CXX_COMPILER}" "-v" ERROR_VARIABLE CXX_VER_STDERR)
-    if("${CXX_VER_STDERR}" MATCHES ".*clang.*")
-        set(CMAKE_COMPILER_IS_CLANGXX 1)
-    endif()
-
-    # C++11 defines
-    if(ENABLE_CPP11)
-        if(MSVC)
-            add_definitions(-D_WEBSOCKETPP_CPP11_FUNCTIONAL_)
-            add_definitions(-D_WEBSOCKETPP_CPP11_SYSTEM_ERROR_)
-            add_definitions(-D_WEBSOCKETPP_CPP11_RANDOM_DEVICE_)
-            add_definitions(-D_WEBSOCKETPP_CPP11_MEMORY_)
-        else()
-            add_definitions(-D_WEBSOCKETPP_CPP11_STL_)
-        endif()
-    endif()
-
-    # Visual studio
-    if(MSVC)
-        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GL /Gy /GF /Ox /Ob2 /Ot /Oi /MP /arch:SSE2 /fp:fast")
-        set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG /INCREMENTAL:NO /OPT:REF /OPT:ICF")
-        add_definitions(/W3 /wd4996 /wd4995 /wd4355)
-        add_definitions(-DUNICODE -D_UNICODE)
-        add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
-        add_definitions(-DNOMINMAX)
-    endif()
-
-    # g++
-    if(CMAKE_COMPILER_IS_GNUCXX)
-        if(NOT APPLE)
-            set(WEBSOCKETPP_PLATFORM_LIBS pthread rt)
-        else()
-            set(WEBSOCKETPP_PLATFORM_LIBS pthread)
-        endif()
-        set(WEBSOCKETPP_PLATFORM_TLS_LIBS ssl crypto)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-        if(NOT APPLE)
-            add_definitions(-DNDEBUG -Wall -Wcast-align) # todo: should we use CMAKE_C_FLAGS for these?
-        endif()
-
-        # Try to detect version. Note: Not tested!
-        execute_process(COMMAND ${CMAKE_CXX_COMPILER} "-dumpversion" OUTPUT_VARIABLE GCC_VERSION)
-        if("${GCC_VERSION}" STRGREATER "4.4.0")
-            message("* C++11 support partially enabled due to GCC version ${GCC_VERSION}")
-        endif()
-    endif()
-
-    # clang
-    if(CMAKE_COMPILER_IS_CLANGXX)
-        if(NOT APPLE)
-            set(WEBSOCKETPP_PLATFORM_LIBS pthread rt)
-        else()
-            set(WEBSOCKETPP_PLATFORM_LIBS pthread)
-        endif()
-        set(WEBSOCKETPP_PLATFORM_TLS_LIBS ssl crypto)
-        set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++0x -stdlib=libc++") # todo: is libc++ really needed here?
-        if(NOT APPLE)
-            add_definitions(-DNDEBUG -Wall -Wno-padded) # todo: should we use CMAKE_C_FLAGS for these?
-        endif()
-    endif()
-
-    # OSX, can override above.
-    if(APPLE)
-        add_definitions(-DNDEBUG -Wall)
-    endif()
-
-    if(BUILD_EXAMPLES)
-    endif()
-
-    if(BUILD_TESTS)
-    endif()
 
     ############ Dependencies
 

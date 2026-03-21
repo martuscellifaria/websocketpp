@@ -66,10 +66,10 @@ public:
         m_client.connect(con);
 
         // Create a thread to run the ASIO io_service event loop
-        websocketpp::lib::thread asio_thread(&client::run, &m_client);
+        websocketpp::lib::jthread asio_thread(&client::run, &m_client);
 
         // Create a thread to run the telemetry loop
-        websocketpp::lib::thread telemetry_thread(&telemetry_client::telemetry_loop,this);
+        websocketpp::lib::jthread telemetry_thread(&telemetry_client::telemetry_loop,this);
 
         asio_thread.join();
         telemetry_thread.join();

@@ -128,10 +128,10 @@ int main(int argc, char * argv[]) {
         if (num_threads == 1) {
             testee_server.run();
         } else {
-            typedef websocketpp::lib::shared_ptr<websocketpp::lib::thread> thread_ptr;
+            typedef websocketpp::lib::shared_ptr<websocketpp::lib::jthread> thread_ptr;
             std::vector<thread_ptr> ts;
             for (size_t i = 0; i < num_threads; i++) {
-                ts.push_back(websocketpp::lib::make_shared<websocketpp::lib::thread>(&server::run, &testee_server));
+                ts.push_back(websocketpp::lib::make_shared<websocketpp::lib::jthread>(&server::run, &testee_server));
             }
 
             for (size_t i = 0; i < num_threads; i++) {

@@ -27,7 +27,7 @@ public:
         m_connections.erase(hdl);
     }
 
-    void on_message(connection_hdl hdl, server::message_ptr msg) {
+    void on_message([[maybe_unused]]connection_hdl hdl, server::message_ptr msg) {
         for (auto it : m_connections) {
             m_server.send(it,msg);
         }

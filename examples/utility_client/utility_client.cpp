@@ -138,7 +138,7 @@ public:
         m_endpoint.init_asio();
         m_endpoint.start_perpetual();
 
-        m_thread = websocketpp::lib::make_shared<websocketpp::lib::thread>(&client::run, &m_endpoint);
+        m_thread = websocketpp::lib::make_shared<websocketpp::lib::jthread>(&client::run, &m_endpoint);
     }
 
     ~websocket_endpoint() {
@@ -252,7 +252,7 @@ private:
     typedef std::map<int,connection_metadata::ptr> con_list;
 
     client m_endpoint;
-    websocketpp::lib::shared_ptr<websocketpp::lib::thread> m_thread;
+    websocketpp::lib::shared_ptr<websocketpp::lib::jthread> m_thread;
 
     con_list m_connection_list;
     int m_next_id;

@@ -177,7 +177,7 @@ private:
     //
     // TODO: find a workaround for this or make this format user settable
     static std::ostream & timestamp(std::ostream & os) {
-        std::time_t t = std::time(NULL);
+        std::time_t t = std::time(nullptr);
         std::tm lt = lib::localtime(t);
         #ifdef _WEBSOCKETPP_PUTTIME_
             return os << std::put_time(&lt,"%Y-%m-%d %H:%M:%S");

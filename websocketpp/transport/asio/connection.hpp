@@ -635,7 +635,7 @@ protected:
 		m_bufs,
 		lib::asio::bind_executor(
 		*m_strand,
-		[self = get_shared(), cb = callback](const std::error_code& ec, size_t bytes_transferred) {
+		[self = get_shared(), cb = callback](const std::error_code& ec, size_t) {
 		    self->handle_proxy_write(cb, ec);
 		}
 	    ));

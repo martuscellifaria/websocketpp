@@ -96,7 +96,7 @@ public:
     using clk = lib::chrono::steady_clock;
     // generate and manage our own io_service
     explicit endpoint()
-        : m_io_service(NULL)
+        : m_io_service(nullptr)
         , m_external_io_service(false)
         , m_listen_backlog(lib::asio::socket_base::max_listen_connections)
         , m_reuse_addr(false)
@@ -144,31 +144,11 @@ public:
         , m_alog(src.m_alog)
         , m_state(src.m_state)
     {
-        src.m_io_service = NULL;
+        src.m_io_service = nullptr;
         src.m_external_io_service = false;
-        src.m_acceptor = NULL;
+        src.m_acceptor = nullptr;
         src.m_state = UNINITIALIZED;
     }
-
-    /*endpoint & operator= (const endpoint && rhs) {
-        if (this != &rhs) {
-            m_io_service = rhs.m_io_service;
-            m_external_io_service = rhs.m_external_io_service;
-            m_acceptor = rhs.m_acceptor;
-            m_listen_backlog = rhs.m_listen_backlog;
-            m_reuse_addr = rhs.m_reuse_addr;
-            m_state = rhs.m_state;
-
-            rhs.m_io_service = NULL;
-            rhs.m_external_io_service = false;
-            rhs.m_acceptor = NULL;
-            rhs.m_listen_backlog = lib::asio::socket_base::max_listen_connections;
-            rhs.m_state = UNINITIALIZED;
-            
-            // TODO: this needs to be updated
-        }
-        return *this;
-    }*/
 #endif // _WEBSOCKETPP_MOVE_SEMANTICS_
 
     /// Return whether or not the endpoint produces secure connections.
@@ -1048,7 +1028,7 @@ protected:
 		iterator,
 		lib::asio::bind_executor(
 		    *tcon->get_strand(),
-		    [this, tcon, con_timer, cb = callback](const std::error_code& ec, const auto& endpoint_iterator) {
+		    [this, tcon, con_timer, cb = callback](const std::error_code& ec, const auto&) {
 			this->handle_connect(tcon, con_timer, cb, ec);
 		    }
 		)

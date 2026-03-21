@@ -250,17 +250,16 @@ inline bool dec_octet(std::string::const_iterator start, std::string::const_iter
 inline bool ipv4_literal(std::string::const_iterator start, std::string::const_iterator end) {
     std::string::const_iterator cursor = start;
     size_t counter = 0;
-    for (std::string::const_iterator it = start; it != end; ++it) {
+    for (auto it = start; it != end; ++it) {
         if (*it == '.') {
-            if (dec_octet(cursor,it)) {
-                cursor = it+1;
-                counter++;
-                if (counter > 3) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
+	    if (!dec_octet(cursor, it)) {
+		return false;
+	    }
+	    cursor = it+1;
+	    counter++;
+	    if (counter > 3) {
+		return false;
+	    }
         }
     }
     
@@ -280,7 +279,7 @@ inline bool hex4(std::string::const_iterator start, std::string::const_iterator 
     if (end-start == 0 || end-start >4) {
         return false;
     }
-    for (std::string::const_iterator it = start; it != end; ++it) {
+    for (auto it = start; it != end; ++it) {
         if (!hexdigit(*it)) {
             return false;
         }

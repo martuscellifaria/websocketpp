@@ -28,6 +28,7 @@
 #ifndef WEBSOCKETPP_MESSAGE_BUFFER_ALLOC_HPP
 #define WEBSOCKETPP_MESSAGE_BUFFER_ALLOC_HPP
 
+#include <string_view>
 #include <websocketpp/common/memory.hpp>
 
 #include <string>
@@ -100,9 +101,9 @@ void message_deleter(T* msg) {
 template <typename con_msg_manager>
 class message {
 public:
-    typedef lib::shared_ptr<message> ptr;
+    using ptr = lib::shared_ptr<message>;
 
-    typedef typename con_msg_manager::weak_ptr con_msg_man_ptr;
+    using con_msg_man_ptr = con_msg_manager::weak_ptr;
 
     message(con_msg_man_ptr manager, size_t size = 128)
       : m_manager(manager)
@@ -111,13 +112,13 @@ public:
     frame::opcode::value get_opcode() const {
         return m_opcode;
     }
-    const std::string& get_header() const {
+    std::string_view get_header() const {
         return m_header;
     }
-    const std::string& get_extension_data() const {
+    std::string_view get_extension_data() const {
         return m_extension_data;
     }
-    const std::string& get_payload() const {
+    std::string_view get_payload() const {
         return m_payload;
     }
 

@@ -51,36 +51,18 @@
     #endif
 #endif
 
-#if defined(_WEBSOCKETPP_MINGW_THREAD_)
-    #include <mingw-threads/mingw.thread.h>
-    #include <mingw-threads/mingw.mutex.h>
-    #include <mingw-threads/mingw.condition_variable.h>
-#elif defined(_WEBSOCKETPP_CPP11_THREAD_)
-    #include <thread>
-    #include <mutex>
-    #include <condition_variable>
-#else
-    #include <boost/thread.hpp>
-    #include <boost/thread/mutex.hpp>
-    #include <boost/thread/condition_variable.hpp>
-#endif
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 namespace websocketpp {
 namespace lib {
 
-#if defined(_WEBSOCKETPP_CPP11_THREAD_) || defined(_WEBSOCKETPP_MINGW_THREAD_)
     using std::mutex;
     using std::lock_guard;
-    using std::thread;
+    using std::jthread;
     using std::unique_lock;
     using std::condition_variable;
-#else
-    using boost::mutex;
-    using boost::lock_guard;
-    using boost::thread;
-    using boost::unique_lock;
-    using boost::condition_variable;
-#endif
 
 } // namespace lib
 } // namespace websocketpp
