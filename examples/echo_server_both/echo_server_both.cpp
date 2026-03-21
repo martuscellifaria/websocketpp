@@ -68,7 +68,7 @@ int main() {
     endpoint_plain.init_asio(&ios);
     endpoint_plain.set_message_handler(
         bind(&on_message<server_plain>,&endpoint_plain,::_1,::_2));
-    endpoint_plain.listen(80);
+    endpoint_plain.listen(8080);
     endpoint_plain.start_accept();
 
     // set up tls endpoint
@@ -79,7 +79,7 @@ int main() {
     // TLS endpoint has an extra handler for the tls init
     endpoint_tls.set_tls_init_handler(bind(&on_tls_init,::_1));
     // tls endpoint listens on a different port
-    endpoint_tls.listen(443);
+    endpoint_tls.listen(8443);
     endpoint_tls.start_accept();
 
     // Start the ASIO io_service run loop running both endpoints
