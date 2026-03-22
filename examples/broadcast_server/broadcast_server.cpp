@@ -2,26 +2,23 @@
 
 #include <websocketpp/server.hpp>
 
-#include <iostream>
+#include <print>
 #include <set>
 
-/*#include <boost/thread.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/condition_variable.hpp>*/
-#include <websocketpp/common/thread.hpp>
+#include <thread>
 
 typedef websocketpp::server<websocketpp::config::asio> server;
 
 using websocketpp::connection_hdl;
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
-using websocketpp::lib::thread;
-using websocketpp::lib::mutex;
-using websocketpp::lib::lock_guard;
-using websocketpp::lib::unique_lock;
-using websocketpp::lib::condition_variable;
+using std::jthread;
+using std::mutex;
+using std::lock_guard;
+using std::unique_lock;
+using std::condition_variable;
 
 /* on_open insert connection_hdl into channel
  * on_close remove connection_hdl from channel
@@ -147,7 +144,7 @@ int main() {
     broadcast_server server_instance;
 
     // Start a thread to run the processing loop
-    thread t(bind(&broadcast_server::process_messages,&server_instance));
+    jthread t(bind(&broadcast_server::process_messages,&server_instance));
 
     // Run the asio loop with the main thread
     server_instance.run(9002);
@@ -155,6 +152,6 @@ int main() {
     t.join();
 
     } catch (websocketpp::exception const & e) {
-        std::cout << e.what() << std::endl;
+	std::println("{}", e.what());
     }
 }

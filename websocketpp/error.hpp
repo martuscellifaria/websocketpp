@@ -31,14 +31,14 @@
 #include <exception>
 #include <string>
 #include <utility>
-
 #include <websocketpp/common/cpp11.hpp>
+
 #include <websocketpp/common/system_error.hpp>
 
 namespace websocketpp {
 
 /// Combination error code / string type for returning two values
-typedef std::pair<lib::error_code,std::string> err_str_pair;
+typedef std::pair<std::error_code,std::string> err_str_pair;
 
 /// Library level error codes
 namespace error {
@@ -149,8 +149,7 @@ enum value {
     transport_error
 }; // enum value
 
-
-class category : public lib::error_category {
+class category : public std::error_category {
 public:
     category() {}
 
@@ -232,13 +231,13 @@ public:
     }
 };
 
-inline const lib::error_category& get_category() {
+inline const std::error_category& get_category() {
     static category instance;
     return instance;
 }
 
-inline lib::error_code make_error_code(error::value e) {
-    return lib::error_code(static_cast<int>(e), get_category());
+inline std::error_code make_error_code(error::value e) {
+    return std::error_code(static_cast<int>(e), get_category());
 }
 
 } // namespace error
@@ -255,26 +254,26 @@ namespace websocketpp {
 
 class exception : public std::exception {
 public:
-    exception(std::string const & msg, lib::error_code ec = make_error_code(error::general))
+    exception(std::string const & msg, std::error_code ec = make_error_code(error::general))
       : m_msg(msg.empty() ? ec.message() : msg), m_code(ec)
     {}
 
-    explicit exception(lib::error_code ec)
+    explicit exception(std::error_code ec)
       : m_msg(ec.message()), m_code(ec)
     {}
 
-    ~exception() throw() {}
+    ~exception() noexcept {}
 
-    virtual char const * what() const throw() {
+    virtual char const * what() const noexcept {
         return m_msg.c_str();
     }
 
-    lib::error_code code() const throw() {
+    std::error_code code() const noexcept {
         return m_code;
     }
 
     const std::string m_msg;
-    lib::error_code m_code;
+    std::error_code m_code;
 };
 
 } // namespace websocketpp

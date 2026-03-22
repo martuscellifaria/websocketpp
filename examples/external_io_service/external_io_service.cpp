@@ -31,9 +31,9 @@
 
 #include <iostream>
 
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
 typedef websocketpp::server<websocketpp::config::asio> ws_echo_server;
 
@@ -59,7 +59,7 @@ void on_message(ws_echo_server* s, websocketpp::connection_hdl hdl, ws_echo_serv
 }
 
 int main() {
-    asio::io_service service;
+    asio::io_context service;
 
     // Add a TCP echo server on port 9003
     tcp_echo_server custom_http_server(service, 9003);

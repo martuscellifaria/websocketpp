@@ -27,11 +27,12 @@
 
 #ifndef WEBSOCKETPP_CONFIG_MINIMAL_HPP
 #define WEBSOCKETPP_CONFIG_MINIMAL_HPP
+#include <websocketpp/common/cpp11.hpp>
 
 // Non-Policy common stuff
 #include <websocketpp/common/platforms.hpp>
-#include <websocketpp/common/cpp11.hpp>
-#include <websocketpp/common/stdint.hpp>
+
+#include <stdint.h>
 
 // Concurrency
 #include <websocketpp/concurrency/none.hpp>
@@ -72,24 +73,6 @@ namespace config {
  * NOTE: this config stubs out enough that it cannot be used directly. You must
  * supply at least a transport policy for a config based on `minimal_server` to
  * do anything useful.
- *
- * Present dependency list for minimal_server config:
- *
- * C++98 STL:
- * <algorithm>
- * <map>
- * <sstream>
- * <string>
- * <vector>
- *
- * C++11 STL or Boost
- * <memory>
- * <functional>
- * <system_error>
- *
- * Operating System:
- * <stdint.h> or <boost/cstdint.hpp>
- * <netinet/in.h> or <winsock2.h> (for ntohl.. could potentially bundle this)
  *
  * @since 0.4.0-dev
  */

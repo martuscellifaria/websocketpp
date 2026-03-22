@@ -36,7 +36,7 @@
 #include <websocketpp/logger/levels.hpp>
 
 #include <websocketpp/common/connection_hdl.hpp>
-#include <websocketpp/common/memory.hpp>
+#include <memory>
 #include <websocketpp/common/platforms.hpp>
 
 #include <string>
@@ -53,12 +53,12 @@ struct timer {
 };
 
 template <typename config>
-class connection : public lib::enable_shared_from_this< connection<config> > {
+class connection : public std::enable_shared_from_this< connection<config> > {
 public:
     /// Type of this connection transport component
     typedef connection<config> type;
     /// Type of a shared pointer to this connection transport component
-    typedef lib::shared_ptr<type> ptr;
+    typedef std::shared_ptr<type> ptr;
 
     /// transport concurrency policy
     typedef typename config::concurrency_type concurrency_type;
@@ -71,9 +71,9 @@ public:
     typedef typename concurrency_type::scoped_lock_type scoped_lock_type;
     typedef typename concurrency_type::mutex_type mutex_type;
 
-    typedef lib::shared_ptr<timer> timer_ptr;
+    typedef std::shared_ptr<timer> timer_ptr;
 
-    explicit connection(bool is_server, const lib::shared_ptr<alog_type> & alog, const lib::shared_ptr<elog_type> & elog)
+    explicit connection(bool is_server, const std::shared_ptr<alog_type> & alog, const std::shared_ptr<elog_type> & elog)
       : m_reading(false), m_is_server(is_server), m_alog(alog), m_elog(elog)
     {
         m_alog->write(log::alevel::devel,"debug con transport constructor");
@@ -200,12 +200,12 @@ public:
     }
     
     // debug stuff to invoke the async handlers
-    void expire_timer(lib::error_code const & ec) {
+    void expire_timer(std::error_code const & ec) {
         m_timer_handler(ec);
     }
     
     void fullfil_write() {
-        m_write_handler(lib::error_code());
+        m_write_handler(std::error_code());
     }
 protected:
     /// Initialize the connection transport
@@ -216,7 +216,7 @@ protected:
      */
     void init(init_handler handler) {
         m_alog->write(log::alevel::devel,"debug connection init");
-        handler(lib::error_code());
+        handler(std::error_code());
     }
 
     /// Initiate an async_read for at least num_bytes bytes into buf
@@ -261,7 +261,7 @@ protected:
         }
 
         if (num_bytes == 0 || len == 0) {
-            handler(lib::error_code(),size_t(0));
+            handler(std::error_code(),size_t(0));
             return;
         }
 
@@ -323,9 +323,9 @@ protected:
      * @return Whether or not the transport was able to register the handler for
      * callback.
      */
-    lib::error_code dispatch(dispatch_handler handler) {
+    std::error_code dispatch(dispatch_handler handler) {
         handler();
-        return lib::error_code();
+        return std::error_code();
     }
 
     /// Perform cleanup on socket shutdown_handler
@@ -333,7 +333,7 @@ protected:
      * @param h The `shutdown_handler` to call back when complete
      */
     void async_shutdown(shutdown_handler handler) {
-        handler(lib::error_code());
+        handler(std::error_code());
     }
     
     size_t read_some_impl(char const * buf, size_t len) {
@@ -351,7 +351,7 @@ protected:
         m_cursor += bytes_to_copy;
 
         if (m_cursor >= m_bytes_needed) {
-            complete_read(lib::error_code());
+            complete_read(std::error_code());
         }
 
         return bytes_to_copy;
@@ -373,7 +373,7 @@ protected:
      *
      * @param ec The error code to forward to the read handler
      */
-    void complete_read(lib::error_code const & ec) {
+    void complete_read(std::error_code const & ec) {
         m_reading = false;
 
         read_handler handler = m_read_handler;
@@ -399,8 +399,8 @@ private:
     bool            m_reading;
     bool const      m_is_server;
     bool            m_is_secure;
-    lib::shared_ptr<alog_type>     m_alog;
-    lib::shared_ptr<elog_type>     m_elog;
+    std::shared_ptr<alog_type>     m_alog;
+    std::shared_ptr<elog_type>     m_elog;
     std::string     m_remote_endpoint;
 };
 

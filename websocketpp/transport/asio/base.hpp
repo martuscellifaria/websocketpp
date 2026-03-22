@@ -30,9 +30,9 @@
 
 #include <websocketpp/common/asio.hpp>
 #include <websocketpp/common/cpp11.hpp>
-#include <websocketpp/common/functional.hpp>
+#include <functional>
 #include <websocketpp/common/system_error.hpp>
-#include <websocketpp/common/type_traits.hpp>
+#include <type_traits>
 
 #include <string>
 
@@ -79,7 +79,7 @@ public:
 
 private:
     // Storage space used for handler-based custom memory allocation.
-    lib::aligned_storage<size>::type m_storage;
+    alignas(std::max_align_t) std::byte m_storage[size];
 
     // Whether the handler-based custom allocation storage has been used.
     bool m_in_use;
@@ -142,13 +142,13 @@ inline custom_alloc_handler<Handler> make_custom_alloc_handler(
 template <typename config>
 class endpoint;
 
-typedef lib::function<void (lib::asio::error_code const & ec,
+typedef std::function<void (lib::asio::error_code const & ec,
     size_t bytes_transferred)> async_read_handler;
 
-typedef lib::function<void (lib::asio::error_code const & ec,
+typedef std::function<void (lib::asio::error_code const & ec,
     size_t bytes_transferred)> async_write_handler;
 
-typedef lib::function<void (lib::error_code const & ec)> pre_init_handler;
+typedef std::function<void (std::error_code const & ec)> pre_init_handler;
 
 // handle_timer: dynamic parameters, multiple copies
 // handle_proxy_write
@@ -181,7 +181,7 @@ enum value {
 };
 
 /// Asio transport error category
-class category : public lib::error_category {
+class category : public std::error_category {
 public:
     char const * name() const _WEBSOCKETPP_NOEXCEPT_TOKEN_ {
         return "websocketpp.transport.asio";
@@ -208,14 +208,14 @@ public:
 };
 
 /// Get a reference to a static copy of the asio transport error category
-inline lib::error_category const & get_category() {
+inline std::error_category const & get_category() {
     static category instance;
     return instance;
 }
 
 /// Create an error code with the given value and the asio transport category
-inline lib::error_code make_error_code(error::value e) {
-    return lib::error_code(static_cast<int>(e), get_category());
+inline std::error_code make_error_code(error::value e) {
+    return std::error_code(static_cast<int>(e), get_category());
 }
 
 } // namespace error

@@ -42,13 +42,13 @@
 
 typedef websocketpp::server<websocketpp::config::asio_tls> server;
 
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
 // pull out the type of messages sent by our config
 typedef websocketpp::config::asio::message_type::ptr message_ptr;
-typedef websocketpp::lib::shared_ptr<websocketpp::lib::asio::ssl::context> context_ptr;
+typedef std::shared_ptr<websocketpp::lib::asio::ssl::context> context_ptr;
 
 void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
     std::cout << "on_message called with hdl: " << hdl.lock().get()
@@ -87,7 +87,7 @@ context_ptr on_tls_init(tls_mode mode, websocketpp::connection_hdl hdl) {
     std::cout << "on_tls_init called with hdl: " << hdl.lock().get() << std::endl;
     std::cout << "using TLS mode: " << (mode == MOZILLA_MODERN ? "Mozilla Modern" : "Mozilla Intermediate") << std::endl;
 
-    context_ptr ctx = websocketpp::lib::make_shared<asio::ssl::context>(asio::ssl::context::sslv23);
+    context_ptr ctx = std::make_shared<asio::ssl::context>(asio::ssl::context::sslv23);
 
     try {
         if (mode == MOZILLA_MODERN) {

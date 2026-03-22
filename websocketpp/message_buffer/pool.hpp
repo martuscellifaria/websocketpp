@@ -28,7 +28,8 @@
 #ifndef WEBSOCKETPP_MESSAGE_BUFFER_ALLOC_HPP
 #define WEBSOCKETPP_MESSAGE_BUFFER_ALLOC_HPP
 
-#include <websocketpp/common/memory.hpp>
+#include <string_view>
+#include <memory>
 
 #include <string>
 
@@ -100,9 +101,9 @@ void message_deleter(T* msg) {
 template <typename con_msg_manager>
 class message {
 public:
-    typedef lib::shared_ptr<message> ptr;
+    using ptr = std::shared_ptr<message>;
 
-    typedef typename con_msg_manager::weak_ptr con_msg_man_ptr;
+    using con_msg_man_ptr = con_msg_manager::weak_ptr;
 
     message(con_msg_man_ptr manager, size_t size = 128)
       : m_manager(manager)
@@ -111,13 +112,13 @@ public:
     frame::opcode::value get_opcode() const {
         return m_opcode;
     }
-    const std::string& get_header() const {
+    std::string_view get_header() const {
         return m_header;
     }
-    const std::string& get_extension_data() const {
+    std::string_view get_extension_data() const {
         return m_extension_data;
     }
-    const std::string& get_payload() const {
+    std::string_view get_payload() const {
         return m_payload;
     }
 
@@ -159,8 +160,8 @@ namespace alloc {
 template <typename message>
 class con_msg_manager {
 public:
-    typedef lib::shared_ptr<con_msg_manager> ptr;
-    typedef lib::weak_ptr<con_msg_manager> weak_ptr;
+    typedef std::shared_ptr<con_msg_manager> ptr;
+    typedef std::weak_ptr<con_msg_manager> weak_ptr;
 
     typedef typename message::ptr message_ptr;
 
@@ -171,7 +172,7 @@ public:
      * @return A shared pointer to a new message with specified size.
      */
     message_ptr get_message(size_t size) const {
-        return lib::make_shared<message>(size);
+        return std::make_shared<message>(size);
     }
 
     /// Recycle a message
@@ -201,7 +202,7 @@ public:
      * @return A pointer to the requested connection message manager.
      */
     con_msg_man_ptr get_manager() const {
-        return lib::make_shared<con_msg_manager>();
+        return std::make_shared<con_msg_manager>();
     }
 };
 

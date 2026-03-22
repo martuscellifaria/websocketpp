@@ -41,10 +41,10 @@
  */
 
 #include <websocketpp/logger/levels.hpp>
-
 #include <websocketpp/common/cpp11.hpp>
-#include <websocketpp/common/stdint.hpp>
-#include <websocketpp/common/time.hpp>
+
+
+#include <stdint.h>
 
 #include <ctime>
 #include <iostream>
@@ -177,8 +177,15 @@ private:
     //
     // TODO: find a workaround for this or make this format user settable
     static std::ostream & timestamp(std::ostream & os) {
-        std::time_t t = std::time(NULL);
-        std::tm lt = lib::localtime(t);
+        std::time_t time = std::time(nullptr);
+	std::tm lt;
+#if (defined(__MINGW32__) || defined(__MINGW64__))
+	memcpy(&lt, ::localtime(&time), sizeof(std::tm));
+#elif (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
+	localtime_s(&lt, &time); 
+#else
+	localtime_r(&time, &lt); // POSIX  
+#endif
         #ifdef _WEBSOCKETPP_PUTTIME_
             return os << std::put_time(&lt,"%Y-%m-%d %H:%M:%S");
         #else // Falls back to strftime, which requires a temporary copy of the string.

@@ -8,7 +8,7 @@ init_target (testee_server)
 
 build_executable (${TARGET_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 
-link_boost ()
+
 link_zlib()
 final_target ()
 

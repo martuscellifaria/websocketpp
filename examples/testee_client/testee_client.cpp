@@ -71,9 +71,9 @@ struct deflate_config : public websocketpp::config::asio_client {
 
 typedef websocketpp::client<deflate_config> client;
 
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
 // pull out the type of messages sent by our config
 typedef websocketpp::config::asio_client::message_type::ptr message_ptr;

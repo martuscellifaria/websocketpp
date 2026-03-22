@@ -1,4 +1,6 @@
 #include <condition_variable>
+#include <chrono>
+#include <thread>
 
 #include <websocketpp/config/asio_no_tls_client.hpp>
 
@@ -6,13 +8,11 @@
 
 #include <iostream>
 
-#include <boost/thread/thread.hpp>
-
 typedef websocketpp::client<websocketpp::config::asio_client> client;
 
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
 // pull out the type of messages sent by our config
 typedef websocketpp::config::asio_client::message_type::ptr message_ptr;
@@ -23,7 +23,7 @@ client sip_client;
 
 bool received;
 
-void on_open(client* c, websocketpp::connection_hdl hdl) {
+void on_open([[maybe_unused]]client* c, websocketpp::connection_hdl hdl) {
     // now it is safe to use the connection
     std::cout << "connection ready" << std::endl;
 
@@ -33,7 +33,7 @@ void on_open(client* c, websocketpp::connection_hdl hdl) {
     sip_client.send(hdl, SIP_msg.c_str(), websocketpp::frame::opcode::text);
 }
 
-void on_message(client* c, websocketpp::connection_hdl hdl, message_ptr msg) {
+void on_message([[maybe_unused]]client* c, websocketpp::connection_hdl hdl, message_ptr msg) {
     client::connection_ptr con = sip_client.get_con_from_hdl(hdl);
 
     std::cout << "Received a reply:" << std::endl;
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
         sip_client.run();
 
         while(!received) {
-            boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+	    std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
 
         std::cout << "done" << std::endl;

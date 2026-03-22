@@ -419,7 +419,7 @@ public:
      * @param [in] version The value to set the HTTP version to.
      * @return A status code describing the outcome of the operation.
      */
-    lib::error_code set_version(std::string const & version);
+    std::error_code set_version(std::string const & version);
 
     /// Get the value of an HTTP header
     /**
@@ -470,7 +470,7 @@ public:
      * @param [in] val The value to append.
      * @return A status code describing the outcome of the operation.
      */
-    lib::error_code append_header(std::string const & key, std::string const & val);
+    std::error_code append_header(std::string const & key, std::string const & val);
 
     /// Set a value for an HTTP header, replacing an existing value
     /**
@@ -488,7 +488,7 @@ public:
      * @param [in] val The value to append.
      * @return A status code describing the outcome of the operation.
      */
-    lib::error_code replace_header(std::string const & key, std::string const & val);
+    std::error_code replace_header(std::string const & key, std::string const & val);
 
     /// Remove a header from the parser
     /**
@@ -502,7 +502,7 @@ public:
      * @param [in] key The name/key of the header to remove.
      * @return A status code describing the outcome of the operation.
      */
-    lib::error_code remove_header(std::string const & key);
+    std::error_code remove_header(std::string const & key);
 
     // todo exception varients for the above 3?
 
@@ -528,7 +528,7 @@ public:
      * @param value String data to include as the body content.
      * @return A status code describing the outcome of the operation.
      */
-    lib::error_code set_body(std::string const & value);
+    std::error_code set_body(std::string const & value);
 
     /// Get body size limit
     /**
@@ -573,7 +573,7 @@ protected:
      * @param [in] end An iterator to the end of the sequence.
      * @return A status code describing the outcome of the operation.
      */
-    lib::error_code process_header(std::string::iterator begin,
+    std::error_code process_header(std::string::iterator begin,
         std::string::iterator end);
 
     /// Prepare the parser to begin parsing body data
@@ -591,7 +591,7 @@ protected:
      * @param [out] ec A status code describing the outcome of the operation.
      * @return True if more bytes are needed to load the body, false otherwise.
      */
-    bool prepare_body(lib::error_code & ec);
+    bool prepare_body(std::error_code & ec);
 
     /// Process body data
     /**
@@ -605,7 +605,7 @@ protected:
      * @param [out] ec A status code describing the outcome of the operation.
      * @return The number of bytes processed
      */
-    size_t process_body(char const * buf, size_t len, lib::error_code & ec);
+    size_t process_body(char const * buf, size_t len, std::error_code & ec);
 
     /// Check if the parser is done parsing the body
     /**

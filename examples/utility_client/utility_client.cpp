@@ -31,8 +31,8 @@
 #include <websocketpp/config/asio_no_tls_client.hpp>
 #include <websocketpp/client.hpp>
 
-#include <websocketpp/common/thread.hpp>
-#include <websocketpp/common/memory.hpp>
+#include <thread>
+#include <memory>
 
 #include <cstdlib>
 #include <iostream>
@@ -44,7 +44,7 @@ typedef websocketpp::client<websocketpp::config::asio_client> client;
 
 class connection_metadata {
 public:
-    typedef websocketpp::lib::shared_ptr<connection_metadata> ptr;
+    typedef std::shared_ptr<connection_metadata> ptr;
 
     connection_metadata(int id, websocketpp::connection_hdl hdl, std::string uri)
       : m_id(id)
@@ -138,7 +138,7 @@ public:
         m_endpoint.init_asio();
         m_endpoint.start_perpetual();
 
-        m_thread = websocketpp::lib::make_shared<websocketpp::lib::thread>(&client::run, &m_endpoint);
+        m_thread = std::make_shared<std::jthread>(&client::run, &m_endpoint);
     }
 
     ~websocket_endpoint() {
@@ -159,8 +159,6 @@ public:
                           << ec.message() << std::endl;
             }
         }
-        
-        m_thread->join();
     }
 
     int connect(std::string const & uri) {
@@ -174,32 +172,32 @@ public:
         }
 
         int new_id = m_next_id++;
-        connection_metadata::ptr metadata_ptr = websocketpp::lib::make_shared<connection_metadata>(new_id, con->get_handle(), uri);
+        connection_metadata::ptr metadata_ptr = std::make_shared<connection_metadata>(new_id, con->get_handle(), uri);
         m_connection_list[new_id] = metadata_ptr;
 
-        con->set_open_handler(websocketpp::lib::bind(
+        con->set_open_handler(std::bind(
             &connection_metadata::on_open,
             metadata_ptr,
             &m_endpoint,
-            websocketpp::lib::placeholders::_1
+            std::placeholders::_1
         ));
-        con->set_fail_handler(websocketpp::lib::bind(
+        con->set_fail_handler(std::bind(
             &connection_metadata::on_fail,
             metadata_ptr,
             &m_endpoint,
-            websocketpp::lib::placeholders::_1
+            std::placeholders::_1
         ));
-        con->set_close_handler(websocketpp::lib::bind(
+        con->set_close_handler(std::bind(
             &connection_metadata::on_close,
             metadata_ptr,
             &m_endpoint,
-            websocketpp::lib::placeholders::_1
+            std::placeholders::_1
         ));
-        con->set_message_handler(websocketpp::lib::bind(
+        con->set_message_handler(std::bind(
             &connection_metadata::on_message,
             metadata_ptr,
-            websocketpp::lib::placeholders::_1,
-            websocketpp::lib::placeholders::_2
+            std::placeholders::_1,
+            std::placeholders::_2
         ));
 
         m_endpoint.connect(con);
@@ -252,7 +250,7 @@ private:
     typedef std::map<int,connection_metadata::ptr> con_list;
 
     client m_endpoint;
-    websocketpp::lib::shared_ptr<websocketpp::lib::thread> m_thread;
+    std::shared_ptr<std::jthread> m_thread;
 
     con_list m_connection_list;
     int m_next_id;

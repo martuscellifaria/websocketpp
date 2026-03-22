@@ -31,8 +31,9 @@
 #include <websocketpp/close.hpp>
 #include <websocketpp/utilities.hpp>
 #include <websocketpp/uri.hpp>
-
 #include <websocketpp/common/cpp11.hpp>
+
+
 #include <websocketpp/common/system_error.hpp>
 
 #include <string>
@@ -158,7 +159,7 @@ enum processor_errors {
 };
 
 /// Category for processor errors
-class processor_category : public lib::error_category {
+class processor_category : public std::error_category {
 public:
     processor_category() {}
 
@@ -235,14 +236,14 @@ public:
 };
 
 /// Get a reference to a static copy of the processor error category
-inline lib::error_category const & get_processor_category() {
+inline std::error_category const & get_processor_category() {
     static processor_category instance;
     return instance;
 }
 
 /// Create an error code with the given value and the processor category
-inline lib::error_code make_error_code(error::processor_errors e) {
-    return lib::error_code(static_cast<int>(e), get_processor_category());
+inline std::error_code make_error_code(error::processor_errors e) {
+    return std::error_code(static_cast<int>(e), get_processor_category());
 }
 
 /// Converts a processor error_code into a websocket close code
@@ -258,7 +259,7 @@ inline lib::error_code make_error_code(error::processor_errors e) {
  * applications, ex: invalid arguments) then
  * close::status::internal_endpoint_error is returned.
  */
-inline close::status::value to_ws(lib::error_code ec) {
+inline close::status::value to_ws(std::error_code ec) {
     if (ec.category() != get_processor_category()) {
         return close::status::blank;
     }

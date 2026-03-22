@@ -5,9 +5,9 @@
 typedef websocketpp::server<websocketpp::config::asio> server;
 
 using websocketpp::connection_hdl;
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
 class broadcast_server {
 public:
@@ -27,7 +27,7 @@ public:
         m_connections.erase(hdl);
     }
 
-    void on_message(connection_hdl hdl, server::message_ptr msg) {
+    void on_message([[maybe_unused]]connection_hdl hdl, server::message_ptr msg) {
         for (auto it : m_connections) {
             m_server.send(it,msg);
         }

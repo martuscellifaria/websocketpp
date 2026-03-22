@@ -74,7 +74,7 @@ public:
         return 0;
     }
 
-    lib::error_code validate_handshake(request_type const & r) const {
+    std::error_code validate_handshake(request_type const & r) const {
         if (r.get_method() != "GET") {
             return make_error_code(error::invalid_http_method);
         }
@@ -94,10 +94,10 @@ public:
             return make_error_code(error::missing_required_header);
         }
 
-        return lib::error_code();
+        return std::error_code();
     }
 
-    lib::error_code process_handshake(request_type const & req,
+    std::error_code process_handshake(request_type const & req,
         std::string const & subprotocol, response_type & res) const
     {
         char key_final[16];
@@ -143,7 +143,7 @@ public:
             res.replace_header("Sec-WebSocket-Protocol",subprotocol);
         }
 
-        return lib::error_code();
+        return std::error_code();
     }
 
     /// Fill in a set of request headers for a client connection request
@@ -155,7 +155,7 @@ public:
      * @param [in] uri The uri being connected to
      * @param [in] subprotocols The list of subprotocols to request
      */
-    lib::error_code client_handshake_request(request_type &, uri_ptr,
+    std::error_code client_handshake_request(request_type &, uri_ptr,
         std::vector<std::string> const &) const
     {
         return error::make_error_code(error::no_protocol_support);
@@ -170,7 +170,7 @@ public:
      * @param res The reponse to generate
      * @return An error code, 0 on success, non-zero for other errors
      */
-    lib::error_code validate_server_handshake_response(request_type const &,
+    std::error_code validate_server_handshake_response(request_type const &,
         response_type &) const
     {
         return error::make_error_code(error::no_protocol_support);
@@ -195,7 +195,7 @@ public:
      * @param [out] subprotocol_list A reference to a vector of strings to store
      * the results in.
      */
-    lib::error_code extract_subprotocols(request_type const & req,
+    std::error_code extract_subprotocols(request_type const & req,
         std::vector<std::string> & subprotocol_list)
     {
         if (!req.get_header("Sec-WebSocket-Protocol").empty()) {
@@ -211,7 +211,7 @@ public:
                  return error::make_error_code(error::subprotocol_parse_error);
              }
         }
-        return lib::error_code();
+        return std::error_code();
     }
 
     uri_ptr get_uri(request_type const & request) const {
@@ -228,9 +228,9 @@ public:
         if (last_colon == std::string::npos ||
             (last_sbrace != std::string::npos && last_sbrace > last_colon))
         {
-            return lib::make_shared<uri>(base::m_secure, h, request.get_uri());
+            return std::make_shared<uri>(base::m_secure, h, request.get_uri());
         } else {
-            return lib::make_shared<uri>(base::m_secure,
+            return std::make_shared<uri>(base::m_secure,
                                    h.substr(0,last_colon),
                                    h.substr(last_colon+1),
                                    request.get_uri());
@@ -249,13 +249,13 @@ public:
     }
 
     /// Process new websocket connection bytes
-    size_t consume(uint8_t * buf, size_t len, lib::error_code & ec) {
+    size_t consume(uint8_t * buf, size_t len, std::error_code & ec) {
         // if in state header we are expecting a 0x00 byte, if we don't get one
         // it is a fatal error
         size_t p = 0; // bytes processed
         size_t l = 0;
 
-        ec = lib::error_code();
+        ec = std::error_code();
 
         while (p < len) {
             if (m_state == HEADER) {
@@ -326,7 +326,7 @@ public:
      * Performs validation, masking, compression, etc. will return an error if
      * there was an error, otherwise msg will be ready to be written
      */
-    virtual lib::error_code prepare_data_frame(message_ptr in, message_ptr out)
+    virtual std::error_code prepare_data_frame(message_ptr in, message_ptr out)
     {
         if (!in || !out) {
             return make_error_code(error::invalid_arguments);
@@ -359,7 +359,7 @@ public:
 
         out->set_prepared(true);
 
-        return lib::error_code();
+        return std::error_code();
     }
 
     /// Prepare a ping frame
@@ -370,9 +370,9 @@ public:
      * @param out The message buffer to prepare the ping in.
      * @return Status code, zero on success, non-zero on failure
      */
-    lib::error_code prepare_ping(std::string const &, message_ptr) const
+    std::error_code prepare_ping(std::string const &, message_ptr) const
     {
-        return lib::error_code(error::no_protocol_support);
+        return std::error_code(error::no_protocol_support);
     }
 
     /// Prepare a pong frame
@@ -383,9 +383,9 @@ public:
      * @param out The message buffer to prepare the pong in.
      * @return Status code, zero on success, non-zero on failure
      */
-    lib::error_code prepare_pong(std::string const &, message_ptr) const
+    std::error_code prepare_pong(std::string const &, message_ptr) const
     {
-        return lib::error_code(error::no_protocol_support);
+        return std::error_code(error::no_protocol_support);
     }
 
     /// Prepare a close frame
@@ -398,11 +398,11 @@ public:
      * @param out The message buffer to prepare the fame in
      * @return Status code, zero on success, non-zero on failure
      */
-    lib::error_code prepare_close(close::status::value, std::string const &, 
+    std::error_code prepare_close(close::status::value, std::string const &, 
         message_ptr out) const
     {
         if (!out) {
-            return lib::error_code(error::invalid_arguments);
+            return std::error_code(error::invalid_arguments);
         }
 
         std::string val;
@@ -411,24 +411,26 @@ public:
         out->set_payload(val);
         out->set_prepared(true);
 
-        return lib::error_code();
+        return std::error_code();
     }
 private:
     void decode_client_key(std::string const & key, char * result) const {
         unsigned int spaces = 0;
-        std::string digits;
+        std::string digits = "";
         uint32_t num;
 
         // key2
-        for (size_t i = 0; i < key.size(); i++) {
-            if (key[i] == ' ') {
-                spaces++;
-            } else if (key[i] >= '0' && key[i] <= '9') {
-                digits += key[i];
+	for (const auto& ch : key) {
+	    if (ch == ' ') {
+		spaces++;
+		continue;
+	    }
+            if (ch >= '0' && ch <= '9') {
+                digits += ch;
             }
-        }
+	}
 
-        num = static_cast<uint32_t>(strtoul(digits.c_str(), NULL, 10));
+        num = static_cast<uint32_t>(strtoul(digits.c_str(), nullptr, 10));
         if (spaces > 0 && num > 0) {
             num = htonl(num/spaces);
             std::copy(reinterpret_cast<char*>(&num),

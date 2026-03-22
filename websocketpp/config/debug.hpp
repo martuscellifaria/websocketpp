@@ -30,9 +30,10 @@
 
 
 
-// Non-Policy common stuff
 #include <websocketpp/common/cpp11.hpp>
-#include <websocketpp/common/stdint.hpp>
+// Non-Policy common stuff
+
+#include <stdint.h>
 
 // Concurrency
 #include <websocketpp/concurrency/basic.hpp>

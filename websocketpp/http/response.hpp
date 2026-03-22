@@ -57,11 +57,11 @@ namespace parser {
 class response : public parser {
 public:
     typedef response type;
-    typedef lib::shared_ptr<type> ptr;
+    typedef std::shared_ptr<type> ptr;
 
     response()
       : m_read(0)
-      , m_buf(lib::make_shared<std::string>())
+      , m_buf(std::make_shared<std::string>())
       , m_status_code(status_code::uninitialized)
       , m_state(RESPONSE_LINE) {}
 
@@ -90,7 +90,7 @@ public:
      * @param [out] ec A status code describing the outcome of the operation.
      * @return Number of bytes processed.
      */
-    size_t consume(char const * buf, size_t len, lib::error_code & ec);
+    size_t consume(char const * buf, size_t len, std::error_code & ec);
 
     /// Process bytes in the input buffer (istream version)
     /**
@@ -119,14 +119,14 @@ public:
      *
      * If you might need bytes after the header in the istream you should NOT
      * use this wrapper and instead read data out of the istream directly and
-     * pass it to consume(char const *, size_t, lib::error_code). This method
+     * pass it to consume(char const *, size_t, std::error_code). This method
      * allows you to retain overread data.
      * 
      * @deprecated 0.9.0 This overload is dangerous in that it can overread the
      * stream and there isn't a good way to recover bytes lost this way. As of
      * 0.9.0 an error is raised when this situation happens, but generally, it
      * would be better for the calling application to read the stream itself and
-     * call consume(char const *, size_t, lib::error_code) instead which provides
+     * call consume(char const *, size_t, std::error_code) instead which provides
      * a better method of identifying and recovering from overreads.
      *
      * @since 0.9.0 Added ec parameter
@@ -135,7 +135,7 @@ public:
      * @param [out] ec A status code describing the outcome of the operation.
      * @return Number of bytes processed.
      */
-    size_t consume(std::istream & s, lib::error_code & ec);
+    size_t consume(std::istream & s, std::error_code & ec);
 
     /// Returns true if the response is ready.
     /**
@@ -165,7 +165,7 @@ public:
      * @param code Code to set
      * @return A status code describing the outcome of the operation.
      */
-    lib::error_code set_status(status_code::value code);
+    std::error_code set_status(status_code::value code);
 
     /// Set response status code and message
     /**
@@ -179,7 +179,7 @@ public:
      * @param msg Message to set
      * @return A status code describing the outcome of the operation.
      */
-    lib::error_code set_status(status_code::value code, std::string const & msg);
+    std::error_code set_status(status_code::value code, std::string const & msg);
 
     /// Return the response status code
     status_code::value get_status_code() const {
@@ -192,10 +192,10 @@ public:
     }
 private:
     /// Helper function for consume. Process response line
-    lib::error_code process(std::string::iterator begin, std::string::iterator end);
+    std::error_code process(std::string::iterator begin, std::string::iterator end);
 
     /// Helper function for processing body bytes
-    size_t process_body(char const * buf, size_t len, lib::error_code & ec);
+    size_t process_body(char const * buf, size_t len, std::error_code & ec);
 
     enum state {
         RESPONSE_LINE = 0,
@@ -206,7 +206,7 @@ private:
 
     std::string                     m_status_msg;
     size_t                          m_read;
-    lib::shared_ptr<std::string>    m_buf;
+    std::shared_ptr<std::string>    m_buf;
     status_code::value              m_status_code;
     state                           m_state;
 

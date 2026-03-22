@@ -30,7 +30,7 @@
 
 #include <websocketpp/common/system_error.hpp>
 #include <websocketpp/common/cpp11.hpp>
-#include <websocketpp/common/functional.hpp>
+#include <functional>
 #include <websocketpp/common/connection_hdl.hpp>
 
 #include <websocketpp/transport/base/connection.hpp>
@@ -44,7 +44,7 @@ namespace transport {
 namespace iostream {
 
 /// The type and signature of the callback used by iostream transport to write
-typedef lib::function<lib::error_code(connection_hdl, char const *, size_t)>
+typedef std::function<std::error_code(connection_hdl, char const *, size_t)>
     write_handler;
 
 /// The type and signature of the callback used by iostream transport to perform
@@ -53,12 +53,12 @@ typedef lib::function<lib::error_code(connection_hdl, char const *, size_t)>
  * If a vectored write handler is not set the standard write handler will be
  * called multiple times.
  */
-typedef lib::function<lib::error_code(connection_hdl, std::vector<transport::buffer> const
+typedef std::function<std::error_code(connection_hdl, std::vector<transport::buffer> const
     & bufs)> vector_write_handler;
 
 /// The type and signature of the callback used by iostream transport to signal
 /// a transport shutdown.
-typedef lib::function<lib::error_code(connection_hdl)> shutdown_handler;
+typedef std::function<std::error_code(connection_hdl)> shutdown_handler;
 
 /// iostream transport errors
 namespace error {
@@ -82,7 +82,7 @@ enum value {
 };
 
 /// iostream transport error category
-class category : public lib::error_category {
+class category : public std::error_category {
     public:
     category() {}
 
@@ -109,14 +109,14 @@ class category : public lib::error_category {
 };
 
 /// Get a reference to a static copy of the iostream transport error category
-inline lib::error_category const & get_category() {
+inline std::error_category const & get_category() {
     static category instance;
     return instance;
 }
 
 /// Get an error code with the given value and the iostream transport category
-inline lib::error_code make_error_code(error::value e) {
-    return lib::error_code(static_cast<int>(e), get_category());
+inline std::error_code make_error_code(error::value e) {
+    return std::error_code(static_cast<int>(e), get_category());
 }
 
 } // namespace error

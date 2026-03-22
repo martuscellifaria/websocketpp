@@ -38,13 +38,13 @@
 
 typedef websocketpp::client<websocketpp::config::asio_client> client;
 
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
 // pull out the type of messages sent by our config
 typedef websocketpp::config::asio_tls_client::message_type::ptr message_ptr;
-typedef websocketpp::lib::shared_ptr<boost::asio::ssl::context> context_ptr;
+typedef std::shared_ptr<asio::ssl::context> context_ptr;
 typedef client::connection_ptr connection_ptr;
 
 
@@ -94,13 +94,13 @@ public:
 
     context_ptr on_tls_init(websocketpp::connection_hdl) {
         m_tls_init = std::chrono::high_resolution_clock::now();
-        context_ptr ctx = websocketpp::lib::make_shared<boost::asio::ssl::context>(boost::asio::ssl::context::tlsv1);
+        context_ptr ctx = std::make_shared<asio::ssl::context>(asio::ssl::context::tlsv1);
 
         try {
-            ctx->set_options(boost::asio::ssl::context::default_workarounds |
-                             boost::asio::ssl::context::no_sslv2 |
-                             boost::asio::ssl::context::no_sslv3 |
-                             boost::asio::ssl::context::single_dh_use);
+            ctx->set_options(asio::ssl::context::default_workarounds |
+                             asio::ssl::context::no_sslv2 |
+                             asio::ssl::context::no_sslv3 |
+                             asio::ssl::context::single_dh_use);
         } catch (std::exception& e) {
             std::cout << e.what() << std::endl;
         }

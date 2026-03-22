@@ -9,7 +9,7 @@ init_target (echo_server_both)
 
 build_executable (${TARGET_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 
-link_boost ()
+
 link_openssl()
 final_target ()
 

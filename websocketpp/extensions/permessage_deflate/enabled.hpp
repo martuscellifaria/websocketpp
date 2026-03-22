@@ -29,12 +29,15 @@
 #define WEBSOCKETPP_PROCESSOR_EXTENSION_PERMESSAGEDEFLATE_HPP
 
 
+
 #include <websocketpp/common/cpp11.hpp>
-#include <websocketpp/common/memory.hpp>
+#include <memory>
 #include <websocketpp/common/platforms.hpp>
-#include <websocketpp/common/stdint.hpp>
+#include <stdint.h>
 #include <websocketpp/common/system_error.hpp>
 #include <websocketpp/error.hpp>
+#include <print>
+#include <iostream>
 
 #include <websocketpp/extensions/extension.hpp>
 
@@ -52,7 +55,7 @@ namespace extensions {
  * ### permessage-deflate interface
  *
  * **init**\n
- * `lib::error_code init(bool is_server)`\n
+ * `std::error_code init(bool is_server)`\n
  * Performs initialization
  *
  * **is_implimented**\n
@@ -69,7 +72,7 @@ namespace extensions {
  * Create an extension offer string based on local policy
  *
  * **validate_response**\n
- * `lib::error_code validate_response(http::attribute_list const & response)`\n
+ * `std::error_code validate_response(http::attribute_list const & response)`\n
  * Negotiate the parameters of extension use
  *
  * **negotiate**\n
@@ -77,11 +80,11 @@ namespace extensions {
  * Negotiate the parameters of extension use
  *
  * **compress**\n
- * `lib::error_code compress(std::string const & in, std::string & out)`\n
+ * `std::error_code compress(std::string const & in, std::string & out)`\n
  * Compress the bytes in `in` and append them to `out`
  *
  * **decompress**\n
- * `lib::error_code decompress(uint8_t const * buf, size_t len, std::string &
+ * `std::error_code decompress(uint8_t const * buf, size_t len, std::string &
  * out)`\n
  * Decompress `len` bytes from `buf` and append them to string `out`
  */
@@ -116,7 +119,7 @@ enum value {
 };
 
 /// Permessage-deflate error category
-class category : public lib::error_category {
+class category : public std::error_category {
 public:
     category() {}
 
@@ -149,14 +152,14 @@ public:
 };
 
 /// Get a reference to a static copy of the permessage-deflate error category
-inline lib::error_category const & get_category() {
+inline std::error_category const & get_category() {
     static category instance;
     return instance;
 }
 
 /// Create an error code in the permessage-deflate category
-inline lib::error_code make_error_code(error::value e) {
-    return lib::error_code(static_cast<int>(e), get_category());
+inline std::error_code make_error_code(error::value e) {
+    return std::error_code(static_cast<int>(e), get_category());
 }
 
 } // namespace error
@@ -247,15 +250,13 @@ public:
         int ret = deflateEnd(&m_dstate);
 
         if (ret != Z_OK) {
-            //std::cout << "error cleaning up zlib compression state"
-            //          << std::endl;
+	    std::println(std::cerr, "error cleaning up zlib compression state");
         }
 
         ret = inflateEnd(&m_istate);
 
         if (ret != Z_OK) {
-            //std::cout << "error cleaning up zlib decompression state"
-            //          << std::endl;
+	    std::println(std::cerr, "error cleaning up zlib compression state");
         }
     }
 
@@ -270,7 +271,7 @@ public:
      * @param is_server True to initialize as a server, false for a client.
      * @return A code representing the error that occurred, if any
      */
-    lib::error_code init(bool is_server) {
+    std::error_code init(bool is_server) {
         uint8_t deflate_bits;
         uint8_t inflate_bits;
 
@@ -314,7 +315,7 @@ public:
             m_flush = Z_SYNC_FLUSH;
         }
         m_initialized = true;
-        return lib::error_code();
+        return std::error_code();
     }
 
     /// Test if this object implements the permessage-deflate specification
@@ -412,7 +413,7 @@ public:
      * @param mode The mode to use for negotiating this parameter
      * @return A status code
      */
-    lib::error_code set_server_max_window_bits(uint8_t bits, mode::value mode) {
+    std::error_code set_server_max_window_bits(uint8_t bits, mode::value mode) {
         if (bits < min_server_max_window_bits || bits > max_server_max_window_bits) {
             return error::make_error_code(error::invalid_max_window_bits);
         }
@@ -425,7 +426,7 @@ public:
         m_server_max_window_bits = bits;
         m_server_max_window_bits_mode = mode;
 
-        return lib::error_code();
+        return std::error_code();
     }
 
     /// Limit client LZ77 sliding window size
@@ -457,7 +458,7 @@ public:
      * @param mode The mode to use for negotiating this parameter
      * @return A status code
      */
-    lib::error_code set_client_max_window_bits(uint8_t bits, mode::value mode) {
+    std::error_code set_client_max_window_bits(uint8_t bits, mode::value mode) {
         if (bits < min_client_max_window_bits || bits > max_client_max_window_bits) {
             return error::make_error_code(error::invalid_max_window_bits);
         }
@@ -470,7 +471,7 @@ public:
         m_client_max_window_bits = bits;
         m_client_max_window_bits_mode = mode;
 
-        return lib::error_code();
+        return std::error_code();
     }
 
     /// Generate extension offer
@@ -493,8 +494,8 @@ public:
      * @param response The server response attribute list to validate
      * @return Validation error or 0 on success
      */
-    lib::error_code validate_offer(http::attribute_list const &) {
-        return lib::error_code();
+    std::error_code validate_offer(http::attribute_list const &) {
+        return std::error_code();
     }
 
     /// Negotiate extension
@@ -528,7 +529,7 @@ public:
             }
         }
 
-        if (ret.first == lib::error_code()) {
+        if (ret.first == std::error_code()) {
             m_enabled = true;
             ret.second = generate_response();
         }
@@ -545,7 +546,7 @@ public:
      * @param [out] out String to append compressed bytes to
      * @return Error or status code
      */
-    lib::error_code compress(std::string const & in, std::string & out) {
+    std::error_code compress(std::string const & in, std::string & out) {
         if (!m_initialized) {
             return make_error_code(error::uninitialized);
         }
@@ -555,7 +556,7 @@ public:
         if (in.empty()) {
             uint8_t buf[6] = {0x02, 0x00, 0x00, 0x00, 0xff, 0xff};
             out.append((char *)(buf),6);
-            return lib::error_code();
+            return std::error_code();
         }
 
         m_dstate.avail_in = in.size();
@@ -573,7 +574,7 @@ public:
             out.append((char *)(m_compress_buffer.get()),output);
         } while (m_dstate.avail_out == 0);
 
-        return lib::error_code();
+        return std::error_code();
     }
 
     /// Decompress bytes
@@ -583,7 +584,7 @@ public:
      * @param out String to append decompressed bytes to
      * @return Error or status code
      */
-    lib::error_code decompress(uint8_t const * buf, size_t len, std::string &
+    std::error_code decompress(uint8_t const * buf, size_t len, std::string &
         out)
     {
         if (!m_initialized) {
@@ -611,7 +612,7 @@ public:
             );
         } while (m_istate.avail_out == 0);
 
-        return lib::error_code();
+        return std::error_code();
     }
 private:
     /// Generate negotiation response
@@ -650,7 +651,7 @@ private:
      * @param [out] ec A reference to the error code to return errors via
      */
     void negotiate_server_no_context_takeover(std::string const & value,
-        lib::error_code & ec)
+        std::error_code & ec)
     {
         if (!value.empty()) {
             ec = make_error_code(error::invalid_attribute_value);
@@ -666,7 +667,7 @@ private:
      * @param [out] ec A reference to the error code to return errors via
      */
     void negotiate_client_no_context_takeover(std::string const & value,
-        lib::error_code & ec)
+        std::error_code & ec)
     {
         if (!value.empty()) {
             ec = make_error_code(error::invalid_attribute_value);
@@ -699,7 +700,7 @@ private:
      * @param [out] ec A reference to the error code to return errors via
      */
     void negotiate_server_max_window_bits(std::string const & value,
-        lib::error_code & ec)
+        std::error_code & ec)
     {
         uint8_t bits = uint8_t(atoi(value.c_str()));
 
@@ -755,7 +756,7 @@ private:
      * @param [out] ec A reference to the error code to return errors via
      */
     void negotiate_client_max_window_bits(std::string const & value,
-            lib::error_code & ec)
+            std::error_code & ec)
     {
         uint8_t bits = uint8_t(atoi(value.c_str()));
 
@@ -804,8 +805,8 @@ private:
     bool m_initialized;
     int m_flush;
     size_t m_compress_buffer_size;
-    lib::unique_ptr_uchar_array m_compress_buffer;
-    lib::unique_ptr_uchar_array m_decompress_buffer;
+    std::unique_ptr<uint8_t> m_compress_buffer;
+    std::unique_ptr<uint8_t> m_decompress_buffer;
     z_stream m_dstate;
     z_stream m_istate;
 };

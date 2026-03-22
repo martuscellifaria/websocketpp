@@ -27,9 +27,9 @@
 
 #ifndef WEBSOCKETPP_COMMON_SYSTEM_ERROR_HPP
 #define WEBSOCKETPP_COMMON_SYSTEM_ERROR_HPP
-
-
 #include <websocketpp/common/cpp11.hpp>
+
+
 
 // If we've determined that we're in full C++11 mode and the user hasn't
 // explicitly disabled the use of C++11 system_error header, then prefer it to
@@ -50,17 +50,11 @@
 
 
 
-#ifdef _WEBSOCKETPP_CPP11_SYSTEM_ERROR_
-    #include <system_error>
-#else
-    #include <boost/system/error_code.hpp>
-    #include <boost/system/system_error.hpp>
-#endif
+#include <system_error>
 
 namespace websocketpp {
 namespace lib {
 
-#ifdef _WEBSOCKETPP_CPP11_SYSTEM_ERROR_
     using std::errc;
     using std::error_code;
     using std::error_category;
@@ -68,16 +62,6 @@ namespace lib {
     using std::system_error;
     #define _WEBSOCKETPP_ERROR_CODE_ENUM_NS_START_ namespace std {
     #define _WEBSOCKETPP_ERROR_CODE_ENUM_NS_END_ }
-#else
-    namespace errc = boost::system::errc;
-    using boost::system::error_code;
-    using boost::system::error_category;
-    using boost::system::error_condition;
-    using boost::system::system_error;
-    #define _WEBSOCKETPP_ERROR_CODE_ENUM_NS_START_ namespace boost { namespace system {
-    #define _WEBSOCKETPP_ERROR_CODE_ENUM_NS_END_ }}
-#endif
-
 } // namespace lib
 } // namespace websocketpp
 

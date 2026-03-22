@@ -30,10 +30,6 @@
 
 // NOTE: This file must be included before common/asio.hpp
 
-#ifdef ASIO_STANDALONE
-    #include <asio/ssl.hpp>
-#else
-    #include <boost/asio/ssl.hpp>
-#endif
+#include <asio/ssl.hpp>
 
 #endif // WEBSOCKETPP_COMMON_ASIO_SSL_HPP

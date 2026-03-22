@@ -34,8 +34,9 @@
 #include <syslog.h>
 
 #include <websocketpp/logger/basic.hpp>
-
 #include <websocketpp/common/cpp11.hpp>
+
+
 #include <websocketpp/logger/levels.hpp>
 
 namespace websocketpp {
@@ -51,7 +52,7 @@ public:
     /**
      * @param hint A channel type specific hint for how to construct the logger
      */
-    syslog<concurrency,names>(channel_type_hint::value hint =
+    syslog(channel_type_hint::value hint =
         channel_type_hint::access)
       : basic<concurrency,names>(hint), m_channel_type_hint(hint) {}
 
@@ -60,7 +61,7 @@ public:
      * @param channels A set of channels to statically enable
      * @param hint A channel type specific hint for how to construct the logger
      */
-    syslog<concurrency,names>(level channels, channel_type_hint::value hint =
+    syslog(level channels, channel_type_hint::value hint =
         channel_type_hint::access)
       : basic<concurrency,names>(channels, hint), m_channel_type_hint(hint) {}
 

@@ -4,7 +4,7 @@
 // This header pulls in the WebSocket++ abstracted thread support that will
 // select between boost::thread and std::thread based on how the build system
 // is configured.
-#include <websocketpp/common/thread.hpp>
+#include <thread>
 
 /**
  * Define a semi-cross platform helper method that waits/sleeps for a bit.
@@ -26,7 +26,7 @@ void wait_a_bit() {
 class telemetry_client {
 public:
     typedef websocketpp::client<websocketpp::config::asio_client> client;
-    typedef websocketpp::lib::lock_guard<websocketpp::lib::mutex> scoped_lock;
+    typedef std::lock_guard<std::mutex> scoped_lock;
 
     telemetry_client() : m_open(false),m_done(false) {
         // set up access channels to only log interesting things
@@ -39,8 +39,8 @@ public:
         m_client.init_asio();
 
         // Bind the handlers we are using
-        using websocketpp::lib::placeholders::_1;
-        using websocketpp::lib::bind;
+        using std::placeholders::_1;
+        using std::bind;
         m_client.set_open_handler(bind(&telemetry_client::on_open,this,_1));
         m_client.set_close_handler(bind(&telemetry_client::on_close,this,_1));
         m_client.set_fail_handler(bind(&telemetry_client::on_fail,this,_1));
@@ -66,13 +66,10 @@ public:
         m_client.connect(con);
 
         // Create a thread to run the ASIO io_service event loop
-        websocketpp::lib::thread asio_thread(&client::run, &m_client);
+        std::jthread asio_thread(&client::run, &m_client);
 
         // Create a thread to run the telemetry loop
-        websocketpp::lib::thread telemetry_thread(&telemetry_client::telemetry_loop,this);
-
-        asio_thread.join();
-        telemetry_thread.join();
+        std::jthread telemetry_thread(&telemetry_client::telemetry_loop,this);
     }
 
     // The open handler will signal that we are ready to start sending telemetry
@@ -149,7 +146,7 @@ public:
 private:
     client m_client;
     websocketpp::connection_hdl m_hdl;
-    websocketpp::lib::mutex m_lock;
+    std::mutex m_lock;
     bool m_open;
     bool m_done;
 };

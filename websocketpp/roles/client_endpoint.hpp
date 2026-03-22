@@ -86,7 +86,7 @@ public:
      *
      * @return A connection_ptr to the new connection
      */
-    connection_ptr get_connection(uri_ptr location, lib::error_code & ec) {
+    connection_ptr get_connection(uri_ptr location, std::error_code & ec) {
         if (location->get_secure() && !transport_type::is_secure()) {
             ec = error::make_error_code(error::endpoint_not_secure);
             return connection_ptr();
@@ -105,7 +105,7 @@ public:
 
         con->set_uri(location);
 
-        ec = lib::error_code();
+        ec = std::error_code();
         return con;
     }
 
@@ -120,8 +120,8 @@ public:
      *
      * @return A connection_ptr to the new connection
      */
-    connection_ptr get_connection(std::string const & u, lib::error_code & ec) {
-        uri_ptr location = lib::make_shared<uri>(u);
+    connection_ptr get_connection(std::string const & u, std::error_code & ec) {
+        uri_ptr location = std::make_shared<uri>(u);
 
         if (!location->get_valid()) {
             ec = error::make_error_code(error::invalid_uri);
@@ -143,13 +143,13 @@ public:
     connection_ptr connect(connection_ptr con) {
         // Ask transport to perform a connection
         transport_type::async_connect(
-            lib::static_pointer_cast<transport_con_type>(con),
+            std::static_pointer_cast<transport_con_type>(con),
             con->get_uri(),
-            lib::bind(
+            std::bind(
                 &type::handle_connect,
                 this,
                 con,
-                lib::placeholders::_1
+                std::placeholders::_1
             )
         );
 
@@ -157,7 +157,7 @@ public:
     }
 private:
     // handle_connect
-    void handle_connect(connection_ptr con, lib::error_code const & ec) {
+    void handle_connect(connection_ptr con, std::error_code const & ec) {
         if (ec) {
             con->terminate(ec);
 

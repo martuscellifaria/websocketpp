@@ -308,9 +308,9 @@ public:
         , m_body(body)
         , m_error_code(error_code) {}
 
-    ~exception() throw() {}
+    ~exception() noexcept {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
         return m_msg.c_str();
     }
 
@@ -396,7 +396,7 @@ inline status_code::value get_status_code(error::value value) {
 }
 
 /// HTTP parser error category
-class category : public lib::error_category {
+class category : public std::error_category {
 public:
     char const * name() const _WEBSOCKETPP_NOEXCEPT_TOKEN_ {
         return "websocketpp.http";
@@ -435,14 +435,14 @@ public:
 };
 
 /// Get a reference to a static copy of the asio transport error category
-inline lib::error_category const & get_category() {
+inline std::error_category const & get_category() {
     static category instance;
     return instance;
 }
 
 /// Create an error code with the given value and the asio transport category
-inline lib::error_code make_error_code(error::value e) {
-    return lib::error_code(static_cast<int>(e), get_category());
+inline std::error_code make_error_code(error::value e) {
+    return std::error_code(static_cast<int>(e), get_category());
 }
 
 } // namespace error

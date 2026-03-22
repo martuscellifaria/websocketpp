@@ -30,7 +30,7 @@
 
 #include <websocketpp/common/cpp11.hpp>
 #include <websocketpp/common/connection_hdl.hpp>
-#include <websocketpp/common/functional.hpp>
+#include <functional>
 #include <websocketpp/common/system_error.hpp>
 
 #include <string>
@@ -103,7 +103,7 @@ namespace websocketpp {
  * whether or not the connection to the remote endpoint is secure
  *
  * **dispatch**\n
- * `lib::error_code dispatch(dispatch_handler handler)`: invoke handler within
+ * `std::error_code dispatch(dispatch_handler handler)`: invoke handler within
  * the transport's event system if it uses one. Otherwise, this method should
  * simply call `handler` immediately.
  *
@@ -114,25 +114,25 @@ namespace websocketpp {
 namespace transport {
 
 /// The type and signature of the callback passed to the init hook
-typedef lib::function<void(lib::error_code const &)> init_handler;
+typedef std::function<void(std::error_code const &)> init_handler;
 
 /// The type and signature of the callback passed to the read method
-typedef lib::function<void(lib::error_code const &,size_t)> read_handler;
+typedef std::function<void(std::error_code const &,size_t)> read_handler;
 
 /// The type and signature of the callback passed to the write method
-typedef lib::function<void(lib::error_code const &)> write_handler;
+typedef std::function<void(std::error_code const &)> write_handler;
 
 /// The type and signature of the callback passed to the read method
-typedef lib::function<void(lib::error_code const &)> timer_handler;
+typedef std::function<void(std::error_code const &)> timer_handler;
 
 /// The type and signature of the callback passed to the shutdown method
-typedef lib::function<void(lib::error_code const &)> shutdown_handler;
+typedef std::function<void(std::error_code const &)> shutdown_handler;
 
 /// The type and signature of the callback passed to the interrupt method
-typedef lib::function<void()> interrupt_handler;
+typedef std::function<void()> interrupt_handler;
 
 /// The type and signature of the callback passed to the dispatch method
-typedef lib::function<void()> dispatch_handler;
+typedef std::function<void()> dispatch_handler;
 
 /// A simple utility buffer class
 struct buffer {
@@ -180,7 +180,7 @@ enum value {
     tls_error
 };
 
-class category : public lib::error_category {
+class category : public std::error_category {
     public:
     category() {}
 
@@ -216,13 +216,13 @@ class category : public lib::error_category {
     }
 };
 
-inline lib::error_category const & get_category() {
+inline std::error_category const & get_category() {
     static category instance;
     return instance;
 }
 
-inline lib::error_code make_error_code(error::value e) {
-    return lib::error_code(static_cast<int>(e), get_category());
+inline std::error_code make_error_code(error::value e) {
+    return std::error_code(static_cast<int>(e), get_category());
 }
 
 } // namespace error

@@ -75,9 +75,9 @@ struct testee_config : public websocketpp::config::asio {
 
 typedef websocketpp::server<testee_config> server;
 
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
 // pull out the type of messages sent by our config
 typedef server::message_ptr message_ptr;
@@ -87,8 +87,8 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg) {
     s->send(hdl, msg->get_payload(), msg->get_opcode());
 }
 
-void on_socket_init(websocketpp::connection_hdl, boost::asio::ip::tcp::socket & s) {
-    boost::asio::ip::tcp::no_delay option(true);
+void on_socket_init(websocketpp::connection_hdl, asio::ip::tcp::socket & s) {
+    asio::ip::tcp::no_delay option(true);
     s.set_option(option);
 }
 
@@ -128,14 +128,10 @@ int main(int argc, char * argv[]) {
         if (num_threads == 1) {
             testee_server.run();
         } else {
-            typedef websocketpp::lib::shared_ptr<websocketpp::lib::thread> thread_ptr;
+            typedef std::shared_ptr<std::jthread> thread_ptr;
             std::vector<thread_ptr> ts;
             for (size_t i = 0; i < num_threads; i++) {
-                ts.push_back(websocketpp::lib::make_shared<websocketpp::lib::thread>(&server::run, &testee_server));
-            }
-
-            for (size_t i = 0; i < num_threads; i++) {
-                ts[i]->join();
+                ts.push_back(std::make_shared<std::jthread>(&server::run, &testee_server));
             }
         }
 

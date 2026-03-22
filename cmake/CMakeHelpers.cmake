@@ -2,7 +2,6 @@
 # Print build configuration
 macro (print_used_build_config)
     message ("\n=========== Used Build Configuration =============\n")
-    message (STATUS "ENABLE_CPP11        = " ${ENABLE_CPP11})
     message (STATUS "BUILD_EXAMPLES      = " ${BUILD_EXAMPLES})
     message (STATUS "BUILD_TESTS         = " ${BUILD_TESTS})
     message ("")
@@ -11,7 +10,6 @@ macro (print_used_build_config)
     message (STATUS "WEBSOCKETPP_LIB     = " ${WEBSOCKETPP_LIB})
     message (STATUS "Install prefix      = " ${CMAKE_INSTALL_PREFIX})
     message ("")
-    message (STATUS "WEBSOCKETPP_BOOST_LIBS        = ${WEBSOCKETPP_BOOST_LIBS}")
     message (STATUS "WEBSOCKETPP_PLATFORM_LIBS     = ${WEBSOCKETPP_PLATFORM_LIBS}")
     message (STATUS "WEBSOCKETPP_PLATFORM_TLS_LIBS = ${WEBSOCKETPP_PLATFORM_TLS_LIBS}")
     message ("")
@@ -82,11 +80,6 @@ macro (final_target)
     install (DIRECTORY ${CMAKE_SOURCE_DIR}/${TARGET_NAME}
              DESTINATION ${INSTALL_INCLUDE_DIR}/
              FILES_MATCHING PATTERN "*.hpp*")
-endmacro ()
-
-macro (link_boost)
-    target_link_libraries (${TARGET_NAME} ${Boost_LIBRARIES})
-    set_property(TARGET ${TARGET_NAME} APPEND PROPERTY INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR})
 endmacro ()
 
 macro (link_openssl)
