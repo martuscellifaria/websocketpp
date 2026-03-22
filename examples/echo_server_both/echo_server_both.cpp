@@ -9,12 +9,12 @@ typedef websocketpp::server<websocketpp::config::asio> server_plain;
 typedef websocketpp::server<websocketpp::config::asio_tls> server_tls;
 
 // alias some of the bind related functions as they are a bit long
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
 // type of the ssl context pointer is long so alias it
-typedef websocketpp::lib::shared_ptr<asio::ssl::context> context_ptr;
+typedef std::shared_ptr<asio::ssl::context> context_ptr;
 
 // The shared on_message handler takes a template parameter so the function can
 // resolve any endpoint dependent types like message_ptr or connection_ptr

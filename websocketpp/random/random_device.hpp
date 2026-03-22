@@ -28,7 +28,7 @@
 #ifndef WEBSOCKETPP_RANDOM_RANDOM_DEVICE_HPP
 #define WEBSOCKETPP_RANDOM_RANDOM_DEVICE_HPP
 
-#include <websocketpp/common/random.hpp>
+#include <random>
 
 namespace websocketpp {
 namespace random {
@@ -63,8 +63,8 @@ class int_generator {
     private:
 
 
-        lib::random_device m_rng;
-        lib::uniform_int_distribution<int_type> m_dis;
+        std::random_device m_rng;
+        std::uniform_int_distribution<int_type> m_dis;
 
         mutex_type m_lock;
 };

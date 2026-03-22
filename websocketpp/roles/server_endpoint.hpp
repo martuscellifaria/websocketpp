@@ -65,7 +65,7 @@ public:
     typedef endpoint<connection_type,config> endpoint_type;
 
     /// The type and signature of the callback passed to the start_accept method
-    typedef lib::function<void(lib::error_code const &, lib::error_code const &)> accept_loop_handler;
+    typedef std::function<void(std::error_code const &, std::error_code const &)> accept_loop_handler;
 
     friend class connection<config>;
 
@@ -104,15 +104,15 @@ public:
      * Note: The connection must either be started or terminated using
      * connection::terminate in order to avoid memory leaks.
      *
-     * @deprecated 0.9.0 use `get_connection(lib::error_code &)` instead.
+     * @deprecated 0.9.0 use `get_connection(std::error_code &)` instead.
      * 
-     * @see `get_connection(lib::error_code &)` for an alternative that
+     * @see `get_connection(std::error_code &)` for an alternative that
      * returns a detailed error code on failure.
      * 
      * @return A pointer to the new connection.
      */
     connection_ptr get_connection() {
-        lib::error_code ec;
+        std::error_code ec;
         return endpoint_type::create_connection(ec);
     }
 
@@ -130,7 +130,7 @@ public:
      *        if the returned pointer is blank.
      * @return A pointer to the new connection.
      */
-    connection_ptr get_connection(lib::error_code & ec) {
+    connection_ptr get_connection(std::error_code & ec) {
         return endpoint_type::create_connection(ec);
     }
 
@@ -155,13 +155,13 @@ public:
      * 
      * @param [out] ec A status code indicating an error, if any.
      */
-    void start_accept(lib::error_code & ec) {
+    void start_accept(std::error_code & ec) {
         if (!transport_type::is_listening()) {
             ec = error::make_error_code(error::async_accept_not_listening);
             return;
         }
         
-        ec = lib::error_code();
+        ec = std::error_code();
         connection_ptr con = get_connection(ec);
 
         if (!con) {
@@ -170,15 +170,15 @@ public:
         }
 
         transport_type::async_accept(
-            lib::static_pointer_cast<transport_con_type>(con),
-            lib::bind(&type::handle_accept_legacy,this,con,lib::placeholders::_1),
+            std::static_pointer_cast<transport_con_type>(con),
+            std::bind(&type::handle_accept_legacy,this,con,std::placeholders::_1),
             ec
         );
 
         if (ec && con) {
             // If the connection was constructed but the accept failed,
             // terminate the connection to prevent memory leaks
-            con->terminate(lib::error_code());
+            con->terminate(std::error_code());
         }
     }
 
@@ -216,7 +216,7 @@ public:
             return;
         }
         
-        lib::error_code tec;
+        std::error_code tec;
         connection_ptr con = get_connection(tec);
 
         if (!con) {
@@ -225,11 +225,11 @@ public:
         }
 
         transport_type::async_accept(
-            lib::static_pointer_cast<transport_con_type>(con),
-            lib::bind(&type::handle_accept,this,
+            std::static_pointer_cast<transport_con_type>(con),
+            std::bind(&type::handle_accept,this,
                       con,
                       completion_handler,
-                      lib::placeholders::_1),
+                      std::placeholders::_1),
             tec
         );
 
@@ -237,7 +237,7 @@ public:
             if (con) {
                 // If the connection was constructed but the accept failed,
                 // terminate the connection to prevent memory leaks.
-                con->terminate(lib::error_code());
+                con->terminate(std::error_code());
             }
 
             endpoint_type::m_elog->write(log::elevel::rerror,
@@ -273,7 +273,7 @@ public:
      * @exception websocketpp::exception If the accept loop fails to be set up.
      */
     void start_accept() {
-        lib::error_code ec;
+        std::error_code ec;
         start_accept(ec);
         if (ec) {
             throw exception(ec);
@@ -282,7 +282,7 @@ public:
 #endif // _WEBSOCKETPP_NO_EXCEPTIONS_
 
     /// Handler callback for start_accept (deprecated)
-    void handle_accept_legacy(connection_ptr con, lib::error_code const & ec) {
+    void handle_accept_legacy(connection_ptr con, std::error_code const & ec) {
         if (ec) {
             con->terminate(ec);
 
@@ -297,7 +297,7 @@ public:
             con->start();
         }
 
-        lib::error_code start_ec;
+        std::error_code start_ec;
         start_accept(start_ec);
         if (start_ec == error::async_accept_not_listening) {
             endpoint_type::m_elog->write(log::elevel::info,
@@ -311,7 +311,7 @@ public:
     /// Handler callback for start_accept
     void handle_accept(connection_ptr con, 
                        accept_loop_handler completion_handler,
-                       lib::error_code const & tec)
+                       std::error_code const & tec)
     {
         // deal with the newly accepted connection
         if (tec) {

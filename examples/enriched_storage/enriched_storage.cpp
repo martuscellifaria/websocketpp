@@ -31,9 +31,9 @@ typedef websocketpp::server<custom_config> server;
 typedef server::connection_ptr connection_ptr;
 
 using websocketpp::connection_hdl;
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
 class print_server {
 public:

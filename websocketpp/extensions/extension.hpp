@@ -28,6 +28,7 @@
 #ifndef WEBSOCKETPP_EXTENSION_HPP
 #define WEBSOCKETPP_EXTENSION_HPP
 
+
 #include <websocketpp/common/cpp11.hpp>
 #include <websocketpp/common/system_error.hpp>
 
@@ -58,7 +59,7 @@ enum value {
     disabled
 };
 
-class category : public lib::error_category {
+class category : public std::error_category {
 public:
     category() {}
 
@@ -78,13 +79,13 @@ public:
     }
 };
 
-inline lib::error_category const & get_category() {
+inline std::error_category const & get_category() {
     static category instance;
     return instance;
 }
 
-inline lib::error_code make_error_code(error::value e) {
-    return lib::error_code(static_cast<int>(e), get_category());
+inline std::error_code make_error_code(error::value e) {
+    return std::error_code(static_cast<int>(e), get_category());
 }
 
 } // namespace error

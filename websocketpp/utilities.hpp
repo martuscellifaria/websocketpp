@@ -28,7 +28,7 @@
 #ifndef WEBSOCKETPP_UTILITIES_HPP
 #define WEBSOCKETPP_UTILITIES_HPP
 
-#include <websocketpp/common/stdint.hpp>
+#include <stdint.h>
 
 #include <algorithm>
 #include <string>

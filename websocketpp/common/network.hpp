@@ -36,7 +36,7 @@
     #include <netinet/in.h>
 #endif
 
-#include <websocketpp/common/stdint.hpp>
+#include <stdint.h>
 
 namespace websocketpp {
 namespace lib {

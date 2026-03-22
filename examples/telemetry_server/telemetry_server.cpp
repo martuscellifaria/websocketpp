@@ -43,8 +43,8 @@ public:
         m_endpoint.init_asio();
 
         // Bind the handlers we are using
-        using websocketpp::lib::placeholders::_1;
-        using websocketpp::lib::bind;
+        using std::placeholders::_1;
+        using std::bind;
         m_endpoint.set_open_handler(bind(&telemetry_server::on_open,this,_1));
         m_endpoint.set_close_handler(bind(&telemetry_server::on_close,this,_1));
         m_endpoint.set_http_handler(bind(&telemetry_server::on_http,this,_1));
@@ -77,10 +77,10 @@ public:
     void set_timer() {
         m_timer = m_endpoint.set_timer(
             1000,
-            websocketpp::lib::bind(
+            std::bind(
                 &telemetry_server::on_timer,
                 this,
-                websocketpp::lib::placeholders::_1
+                std::placeholders::_1
             )
         );
     }

@@ -55,7 +55,7 @@ enum value {
 };
 
 /// debug transport error category
-class category : public lib::error_category {
+class category : public std::error_category {
     public:
     category() {}
 
@@ -80,14 +80,14 @@ class category : public lib::error_category {
 };
 
 /// Get a reference to a static copy of the debug transport error category
-inline lib::error_category const & get_category() {
+inline std::error_category const & get_category() {
     static category instance;
     return instance;
 }
 
 /// Get an error code with the given value and the debug transport category
-inline lib::error_code make_error_code(error::value e) {
-    return lib::error_code(static_cast<int>(e), get_category());
+inline std::error_code make_error_code(error::value e) {
+    return std::error_code(static_cast<int>(e), get_category());
 }
 
 } // namespace error

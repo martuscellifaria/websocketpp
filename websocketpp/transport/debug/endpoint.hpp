@@ -28,7 +28,7 @@
 #ifndef WEBSOCKETPP_TRANSPORT_DEBUG_HPP
 #define WEBSOCKETPP_TRANSPORT_DEBUG_HPP
 
-#include <websocketpp/common/memory.hpp>
+#include <memory>
 #include <websocketpp/logger/levels.hpp>
 
 #include <websocketpp/transport/base/endpoint.hpp>
@@ -44,7 +44,7 @@ public:
     /// Type of this endpoint transport component
     typedef endpoint type;
     /// Type of a pointer to this endpoint transport component
-    typedef lib::shared_ptr<type> ptr;
+    typedef std::shared_ptr<type> ptr;
 
     /// Type of this endpoint's concurrency policy
     typedef typename config::concurrency_type concurrency_type;
@@ -103,7 +103,7 @@ protected:
      * @param a A pointer to the access logger to use.
      * @param e A pointer to the error logger to use.
      */
-    void init_logging(lib::shared_ptr<alog_type>, lib::shared_ptr<elog_type>) {}
+    void init_logging(std::shared_ptr<alog_type>, std::shared_ptr<elog_type>) {}
 
     /// Initiate a new connection
     /**
@@ -113,7 +113,7 @@ protected:
      * @param cb The function to call back with the results when complete.
      */
     void async_connect(transport_con_ptr, uri_ptr, connect_handler cb) {
-        cb(lib::error_code());
+        cb(std::error_code());
     }
 
     /// Initialize a connection
@@ -126,8 +126,8 @@ protected:
      * @param tcon A pointer to the transport portion of the connection.
      * @return A status code indicating the success or failure of the operation
      */
-    lib::error_code init(transport_con_ptr) {
-        return lib::error_code();
+    std::error_code init(transport_con_ptr) {
+        return std::error_code();
     }
 private:
 

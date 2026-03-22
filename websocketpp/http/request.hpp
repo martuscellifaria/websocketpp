@@ -30,7 +30,7 @@
 
 #include <string>
 
-#include <websocketpp/common/memory.hpp>
+#include <memory>
 #include <websocketpp/http/parser.hpp>
 
 namespace websocketpp {
@@ -50,10 +50,10 @@ namespace parser {
 class request : public parser {
 public:
     typedef request type;
-    typedef lib::shared_ptr<type> ptr;
+    typedef std::shared_ptr<type> ptr;
 
     request()
-      : m_buf(lib::make_shared<std::string>())
+      : m_buf(std::make_shared<std::string>())
       , m_ready(false) {}
 
     /// Process bytes in the input buffer
@@ -79,7 +79,7 @@ public:
      * @param [out] ec A status code describing the outcome of the operation.
      * @return Number of bytes processed.
      */
-    size_t consume(char const * buf, size_t len, lib::error_code & ec);
+    size_t consume(char const * buf, size_t len, std::error_code & ec);
 
     /// Returns whether or not the request is ready for reading.
     bool ready() const {
@@ -101,7 +101,7 @@ public:
      * @param [in] method The value to set the method to.
      * @return A status code describing the outcome of the operation.
      */
-    lib::error_code set_method(std::string const & method);
+    std::error_code set_method(std::string const & method);
 
     /// Return the request method
     std::string const & get_method() const {
@@ -117,7 +117,7 @@ public:
      * @param uri The URI to set
      * @return A status code describing the outcome of the operation.
      */
-    lib::error_code set_uri(std::string const & uri);
+    std::error_code set_uri(std::string const & uri);
 
     /// Return the requested URI
     std::string const & get_uri() const {
@@ -133,9 +133,9 @@ private:
      * @param [in] end An iterator to the end of the sequence.
      * @return A status code describing the outcome of the operation.
      */
-    lib::error_code process(std::string::iterator begin, std::string::iterator end);
+    std::error_code process(std::string::iterator begin, std::string::iterator end);
 
-    lib::shared_ptr<std::string>    m_buf;
+    std::shared_ptr<std::string>    m_buf;
     std::string                     m_method;
     std::string                     m_uri;
     bool                            m_ready;

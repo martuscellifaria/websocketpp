@@ -35,8 +35,8 @@
 #include <websocketpp/common/asio_ssl.hpp>
 #include <websocketpp/common/asio.hpp>
 #include <websocketpp/common/connection_hdl.hpp>
-#include <websocketpp/common/functional.hpp>
-#include <websocketpp/common/memory.hpp>
+#include <functional>
+#include <memory>
 
 #include <sstream>
 #include <string>
@@ -49,10 +49,10 @@ namespace asio {
 namespace tls_socket {
 
 /// The signature of the socket_init_handler for this socket policy
-typedef lib::function<void(connection_hdl,lib::asio::ssl::stream<
+typedef std::function<void(connection_hdl,lib::asio::ssl::stream<
     lib::asio::ip::tcp::socket>&)> socket_init_handler;
 /// The signature of the tls_init_handler for this socket policy
-typedef lib::function<lib::shared_ptr<lib::asio::ssl::context>(connection_hdl)>
+typedef std::function<std::shared_ptr<lib::asio::ssl::context>(connection_hdl)>
     tls_init_handler;
 
 /// TLS enabled Asio connection socket component
@@ -60,23 +60,23 @@ typedef lib::function<lib::shared_ptr<lib::asio::ssl::context>(connection_hdl)>
  * transport::asio::tls_socket::connection implements a secure connection socket
  * component that uses Asio's ssl::stream to wrap an ip::tcp::socket.
  */
-class connection : public lib::enable_shared_from_this<connection> {
+class connection : public std::enable_shared_from_this<connection> {
 public:
     /// Type of this connection socket component
     typedef connection type;
     /// Type of a shared pointer to this connection socket component
-    typedef lib::shared_ptr<type> ptr;
+    typedef std::shared_ptr<type> ptr;
 
     /// Type of the ASIO socket being used
     typedef lib::asio::ssl::stream<lib::asio::ip::tcp::socket> socket_type;
     /// Type of a shared pointer to the ASIO socket being used
-    typedef lib::shared_ptr<socket_type> socket_ptr;
+    typedef std::shared_ptr<socket_type> socket_ptr;
     /// Type of a pointer to the ASIO io_service being used
     typedef lib::asio::io_context * io_service_ptr;
     /// Type of a pointer to the ASIO io_service strand being used
-    typedef lib::shared_ptr<lib::asio::io_context::strand> strand_ptr;
+    typedef std::shared_ptr<lib::asio::io_context::strand> strand_ptr;
     /// Type of a shared pointer to the ASIO TLS context being used
-    typedef lib::shared_ptr<lib::asio::ssl::context> context_ptr;
+    typedef std::shared_ptr<lib::asio::ssl::context> context_ptr;
 
     explicit connection() {
         //std::cout << "transport::asio::tls_socket::connection constructor"
@@ -155,7 +155,7 @@ public:
      *
      * @return A string identifying the address of the remote endpoint
      */
-    std::string get_remote_endpoint(lib::error_code & ec) const {
+    std::string get_remote_endpoint(std::error_code & ec) const {
         std::stringstream s;
 
         lib::asio::error_code aec;
@@ -167,7 +167,7 @@ public:
                << " (" << aec.message() << ")";
             return s.str();
         } else {
-            ec = lib::error_code();
+            ec = std::error_code();
             s << ep;
             return s.str();
         }
@@ -182,7 +182,7 @@ protected:
      * @param strand A pointer to the connection's strand
      * @param is_server Whether or not the endpoint is a server or not.
      */
-    lib::error_code init_asio (io_service_ptr service, strand_ptr strand,
+    std::error_code init_asio (io_service_ptr service, strand_ptr strand,
         bool is_server)
     {
         if (!m_tls_init_handler) {
@@ -199,7 +199,7 @@ protected:
         m_strand = strand;
         m_is_server = is_server;
 
-        return lib::error_code();
+        return std::error_code();
     }
 
     /// Set hostname hook
@@ -247,7 +247,7 @@ protected:
             m_socket_init_handler(m_hdl, get_socket());
         }
 
-        callback(lib::error_code());
+        callback(std::error_code());
     }
 
     /// Post-initialize security policy
@@ -275,10 +275,10 @@ protected:
         } else {
             m_socket->async_handshake(
                 get_handshake_type(),
-                lib::bind(
+                std::bind(
                     &type::handle_init, get_shared(),
                     callback,
-                    lib::placeholders::_1
+                    std::placeholders::_1
                 )
             );
         }
@@ -299,13 +299,13 @@ protected:
         if (ec) {
             m_ec = socket::make_error_code(socket::error::tls_handshake_failed);
         } else {
-            m_ec = lib::error_code();
+            m_ec = std::error_code();
         }
 
         callback(m_ec);
     }
 
-    lib::error_code get_ec() const {
+    std::error_code get_ec() const {
         return m_ec;
     }
 
@@ -356,7 +356,7 @@ public:
      */
     template <typename ErrorCodeType>
     static
-    lib::error_code translate_ec(ErrorCodeType ec) {
+    std::error_code translate_ec(ErrorCodeType ec) {
         if (ec.category() == lib::asio::error::get_ssl_category()) {
             // We know it is a TLS related error, but otherwise don't know more.
             // Pass through as TLS generic.
@@ -369,9 +369,9 @@ public:
     }
 
     static
-    /// Overload of translate_ec to catch cases where lib::error_code is the
+    /// Overload of translate_ec to catch cases where std::error_code is the
     /// same type as lib::asio::error_code
-    lib::error_code translate_ec(lib::error_code ec) {
+    std::error_code translate_ec(std::error_code ec) {
         return ec;
     }
 private:
@@ -390,7 +390,7 @@ private:
     uri_ptr             m_uri;
     bool                m_is_server;
 
-    lib::error_code     m_ec;
+    std::error_code     m_ec;
 
     connection_hdl      m_hdl;
     socket_init_handler m_socket_init_handler;
@@ -457,10 +457,10 @@ protected:
      *
      * @return Error code (empty on success)
      */
-    lib::error_code init(socket_con_ptr scon) {
+    std::error_code init(socket_con_ptr scon) {
         scon->set_socket_init_handler(m_socket_init_handler);
         scon->set_tls_init_handler(m_tls_init_handler);
-        return lib::error_code();
+        return std::error_code();
     }
 
 private:

@@ -38,11 +38,11 @@ namespace websocketpp {
 namespace http {
 namespace parser {
 
-inline lib::error_code parser::set_version(std::string const & version) {
+inline std::error_code parser::set_version(std::string const & version) {
     // todo: validation?
     m_version = version;
 
-    return lib::error_code();
+    return std::error_code();
 }
 
 inline std::string const & parser::get_header(std::string const & key) const {
@@ -69,7 +69,7 @@ inline bool parser::get_header_as_plist(std::string const & key,
     return this->parse_parameter_list(it->second,out);
 }
 
-inline lib::error_code parser::append_header(std::string const & key, std::string const &
+inline std::error_code parser::append_header(std::string const & key, std::string const &
     val)
 {
     if (std::find_if(key.begin(),key.end(),is_not_token_char) != key.end()) {
@@ -81,10 +81,10 @@ inline lib::error_code parser::append_header(std::string const & key, std::strin
     } else {
         m_headers[key] += ", " + val;
     }
-    return lib::error_code();
+    return std::error_code();
 }
 
-inline lib::error_code parser::replace_header(std::string const & key, std::string const &
+inline std::error_code parser::replace_header(std::string const & key, std::string const &
     val)
 {
     if (std::find_if(key.begin(),key.end(),is_not_token_char) != key.end()) {
@@ -92,27 +92,27 @@ inline lib::error_code parser::replace_header(std::string const & key, std::stri
     }
 
     m_headers[key] = val;
-    return lib::error_code();
+    return std::error_code();
 }
 
-inline lib::error_code parser::remove_header(std::string const & key)
+inline std::error_code parser::remove_header(std::string const & key)
 {
     if (std::find_if(key.begin(),key.end(),is_not_token_char) != key.end()) {
         return error::make_error_code(error::invalid_header_name);
     }
 
     m_headers.erase(key);
-    return lib::error_code();
+    return std::error_code();
 }
 
-inline lib::error_code parser::set_body(std::string const & value) {
-    lib::error_code ec;
+inline std::error_code parser::set_body(std::string const & value) {
+    std::error_code ec;
     if (value.size() == 0) {
         ec = remove_header("Content-Length");
         if (ec) { return ec; }
 
         m_body.clear();
-        return lib::error_code();
+        return std::error_code();
     }
 
     if (value.size() > m_body_bytes_max) {
@@ -125,7 +125,7 @@ inline lib::error_code parser::set_body(std::string const & value) {
     if (ec) { return ec; }
 
     m_body = value;
-    return lib::error_code();
+    return std::error_code();
 }
 
 inline bool parser::parse_parameter_list(std::string const & in,
@@ -140,7 +140,7 @@ inline bool parser::parse_parameter_list(std::string const & in,
     return (it == in.begin());
 }
 
-inline bool parser::prepare_body(lib::error_code & ec) {
+inline bool parser::prepare_body(std::error_code & ec) {
     if (!get_header("Content-Length").empty()) {
         std::string const & cl_header = get_header("Content-Length");
         char * end;
@@ -156,7 +156,7 @@ inline bool parser::prepare_body(lib::error_code & ec) {
         }
         
         m_body_encoding = body_encoding::plain;
-        ec = lib::error_code();
+        ec = std::error_code();
         return true;
     } else if (get_header("Transfer-Encoding") == "chunked") {
         // ec = error::make_error_code(error::unsupported_transfer_encoding);
@@ -164,19 +164,19 @@ inline bool parser::prepare_body(lib::error_code & ec) {
         //m_body_encoding = body_encoding::chunked;
         return false;
     } else {
-        ec = lib::error_code();
+        ec = std::error_code();
         return false;
     }
 }
 
 inline size_t parser::process_body(char const * buf, size_t len,
-    lib::error_code & ec)
+    std::error_code & ec)
 {
     if (m_body_encoding == body_encoding::plain) {
         size_t processed = (std::min)(m_body_bytes_needed,len);
         m_body.append(buf,processed);
         m_body_bytes_needed -= processed;
-        ec = lib::error_code();
+        ec = std::error_code();
         return processed;
     } else if (m_body_encoding == body_encoding::chunked) {
         ec = error::make_error_code(error::unsupported_transfer_encoding);
@@ -188,7 +188,7 @@ inline size_t parser::process_body(char const * buf, size_t len,
     }
 }
 
-inline lib::error_code parser::process_header(std::string::iterator begin,
+inline std::error_code parser::process_header(std::string::iterator begin,
     std::string::iterator end)
 {
     std::string::iterator cursor = std::search(

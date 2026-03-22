@@ -31,9 +31,9 @@
 
 #include <iostream>
 
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
 typedef websocketpp::server<websocketpp::config::asio> ws_echo_server;
 

@@ -28,10 +28,11 @@
 #ifndef WEBSOCKETPP_URI_HPP
 #define WEBSOCKETPP_URI_HPP
 
+#include <websocketpp/common/system_error.hpp>
 #include <websocketpp/error.hpp>
 
-#include <websocketpp/common/memory.hpp>
-#include <websocketpp/common/stdint.hpp>
+#include <memory>
+#include <stdint.h>
 
 #include <algorithm>
 #include <sstream>
@@ -543,8 +544,7 @@ public:
             }
             
         }
-
-        lib::error_code ec;
+	std::error_code ec;
         m_port = get_port_from_string(port, ec);
 
         if (ec) {
@@ -594,7 +594,7 @@ public:
       , m_resource(resource.empty() ? "/" : resource)
       , m_secure(secure)
     {
-        lib::error_code ec;
+        std::error_code ec;
         m_port = get_port_from_string(port,ec);
         m_ipv6_literal = uri_helper::ipv6_literal(host.begin(), host.end());
 
@@ -631,7 +631,7 @@ public:
       , m_resource(resource.empty() ? "/" : resource)
       , m_secure(scheme == "wss" || scheme == "https")
     {
-        lib::error_code ec;
+        std::error_code ec;
         m_port = get_port_from_string(port,ec);
         m_ipv6_literal = uri_helper::ipv6_literal(host.begin(), host.end());
 
@@ -755,10 +755,10 @@ public:
     void set_port(const std::string& port);
     void set_resource(const std::string& resource);*/
 private:
-    uint16_t get_port_from_string(std::string const & port, lib::error_code &
+    uint16_t get_port_from_string(std::string const & port, std::error_code &
         ec) const
     {
-        ec = lib::error_code();
+        ec = std::error_code();
 
         if (port.empty()) {
             return (m_secure ? uri_default_secure_port : uri_default_port);
@@ -787,7 +787,7 @@ private:
 };
 
 /// Pointer to a URI
-typedef lib::shared_ptr<uri> uri_ptr;
+using uri_ptr = std::shared_ptr<uri>;
 
 } // namespace websocketpp
 

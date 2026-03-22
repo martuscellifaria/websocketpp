@@ -30,7 +30,7 @@
 
 #include <websocketpp/logger/levels.hpp>
 
-#include <websocketpp/common/cpp11.hpp>
+
 
 #include <string>
 

@@ -38,13 +38,13 @@ namespace websocketpp {
 namespace http {
 namespace parser {
 
-inline size_t request::consume(char const * buf, size_t len, lib::error_code & ec)
+inline size_t request::consume(char const * buf, size_t len, std::error_code & ec)
 {
     size_t bytes_processed = 0;
     
     if (m_ready) {
         // the request is already complete. End immediately without reading.
-        ec = lib::error_code();
+        ec = std::error_code();
         return 0;
     }
     
@@ -105,7 +105,7 @@ inline size_t request::consume(char const * buf, size_t len, lib::error_code & e
                 m_buf->resize(static_cast<std::string::size_type>(end-begin));
             }
 
-            ec = lib::error_code();
+            ec = std::error_code();
             return len;
         }
 
@@ -161,13 +161,13 @@ inline size_t request::consume(char const * buf, size_t len, lib::error_code & e
                 if (body_ready()) {
                     m_ready = true;
                 }
-                ec = lib::error_code();
+                ec = std::error_code();
                 return bytes_processed;
             } else {
                 m_ready = true;
 
                 // return number of bytes processed (starting bytes - bytes left)
-                ec = lib::error_code();
+                ec = std::error_code();
                 return bytes_processed;
             }
         } else {
@@ -212,27 +212,27 @@ inline std::string request::raw_head() const {
     return ret.str();
 }
 
-inline lib::error_code request::set_method(std::string const & method)
+inline std::error_code request::set_method(std::string const & method)
 {
     if (std::find_if(method.begin(),method.end(),is_not_token_char) != method.end()) {
         return error::make_error_code(error::invalid_format);
     }
 
     m_method = method;
-    return lib::error_code();
+    return std::error_code();
 }
 
-inline lib::error_code request::set_uri(std::string const & uri) {
+inline std::error_code request::set_uri(std::string const & uri) {
     // TODO: validation?
     m_uri = uri;
 
-    return lib::error_code();
+    return std::error_code();
 }
 
-inline lib::error_code request::process(std::string::iterator begin, std::string::iterator
+inline std::error_code request::process(std::string::iterator begin, std::string::iterator
     end)
 {
-    lib::error_code ec;
+    std::error_code ec;
 
     std::string::iterator cursor_start = begin;
     std::string::iterator cursor_end = std::find(begin,end,' ');

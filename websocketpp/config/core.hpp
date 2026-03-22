@@ -28,10 +28,11 @@
 #ifndef WEBSOCKETPP_CONFIG_CORE_HPP
 #define WEBSOCKETPP_CONFIG_CORE_HPP
 
+#include <websocketpp/common/cpp11.hpp>
 // Non-Policy common stuff
 #include <websocketpp/common/platforms.hpp>
-#include <websocketpp/common/cpp11.hpp>
-#include <websocketpp/common/stdint.hpp>
+
+#include <stdint.h>
 
 // Concurrency
 #include <websocketpp/concurrency/basic.hpp>

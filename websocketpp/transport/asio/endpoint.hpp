@@ -31,7 +31,7 @@
 #include <asio/executor_work_guard.hpp>
 
 #include <websocketpp/common/asio.hpp>
-#include <websocketpp/common/functional.hpp>
+#include <functional>
 #include <websocketpp/logger/levels.hpp>
 #include <websocketpp/transport/asio/connection.hpp>
 #include <websocketpp/transport/asio/security/none.hpp>
@@ -80,20 +80,20 @@ public:
     /// Type of a pointer to the ASIO io_service being used
     typedef lib::asio::io_context * io_service_ptr;
     /// Type of a shared pointer to the acceptor being used
-    typedef lib::shared_ptr<lib::asio::ip::tcp::acceptor> acceptor_ptr;
+    typedef std::shared_ptr<lib::asio::ip::tcp::acceptor> acceptor_ptr;
     /// Type of a shared pointer to the resolver being used
-    typedef lib::shared_ptr<lib::asio::ip::tcp::resolver> resolver_ptr;
+    typedef std::shared_ptr<lib::asio::ip::tcp::resolver> resolver_ptr;
     /// Type of timer handle
-    typedef lib::shared_ptr<lib::asio::steady_timer> timer_ptr;
+    typedef std::shared_ptr<lib::asio::steady_timer> timer_ptr;
     /// Type of a shared pointer to an io_service work object
-    typedef lib::shared_ptr<
+    typedef std::shared_ptr<
         lib::asio::executor_work_guard<lib::asio::io_context::executor_type>>
         work_ptr;
 
     /// Type of socket pre-bind handler
-    typedef lib::function<lib::error_code(acceptor_ptr)> tcp_pre_bind_handler;
+    typedef std::function<std::error_code(acceptor_ptr)> tcp_pre_bind_handler;
 
-    using clk = lib::chrono::steady_clock;
+    using clk = std::chrono::steady_clock;
     // generate and manage our own io_service
     explicit endpoint()
         : m_io_service(nullptr)
@@ -165,7 +165,7 @@ public:
      * @param ptr A pointer to the io_service to use for asio events
      * @param ec Set to indicate what error occurred, if any.
      */
-    void init_asio(io_service_ptr ptr, lib::error_code & ec) {
+    void init_asio(io_service_ptr ptr, std::error_code & ec) {
         if (m_state != UNINITIALIZED) {
             m_elog->write(log::elevel::library,
                 "asio::init_asio called from the wrong state");
@@ -181,7 +181,7 @@ public:
         m_acceptor.reset(new lib::asio::ip::tcp::acceptor(*m_io_service));
 
         m_state = READY;
-        ec = lib::error_code();
+        ec = std::error_code();
     }
 
 #ifndef _WEBSOCKETPP_NO_EXCEPTIONS_
@@ -194,7 +194,7 @@ public:
      * @param ptr A pointer to the io_service to use for asio events
      */
     void init_asio(io_service_ptr ptr) {
-        lib::error_code ec;
+        std::error_code ec;
         init_asio(ptr,ec);
         if (ec) { throw exception(ec); }
     }
@@ -209,15 +209,15 @@ public:
      *
      * @param ec Set to indicate what error occurred, if any.
      */
-    void init_asio(lib::error_code & ec) {
+    void init_asio(std::error_code & ec) {
         // Use a smart pointer until the call is successful and ownership has 
         // successfully been taken. Use unique_ptr when available.
-        // TODO: remove the use of auto_ptr when C++98/03 support is no longer
+        // TODO: remove the use of unique_ptr when C++98/03 support is no longer
         //       necessary.
 #ifdef _WEBSOCKETPP_CPP11_MEMORY_
-        lib::unique_ptr<lib::asio::io_context> service(new lib::asio::io_context());
+        std::unique_ptr<lib::asio::io_context> service(new lib::asio::io_context());
 #else
-        lib::auto_ptr<lib::asio::io_context> service(new lib::asio::io_context());
+        std::unique_ptr<lib::asio::io_context> service(new lib::asio::io_context());
 #endif
         init_asio(service.get(), ec);
         if( !ec ) service.release(); // Call was successful, transfer ownership
@@ -235,12 +235,12 @@ public:
     void init_asio() {
         // Use a smart pointer until the call is successful and ownership has 
         // successfully been taken. Use unique_ptr when available.
-        // TODO: remove the use of auto_ptr when C++98/03 support is no longer
+        // TODO: remove the use of unique_ptr when C++98/03 support is no longer
         //       necessary.
 #ifdef _WEBSOCKETPP_CPP11_MEMORY_
-        lib::unique_ptr<lib::asio::io_context> service(new lib::asio::io_context());
+        std::unique_ptr<lib::asio::io_context> service(new lib::asio::io_context());
 #else
-        lib::auto_ptr<lib::asio::io_context> service(new lib::asio::io_context());
+        std::unique_ptr<lib::asio::io_context> service(new lib::asio::io_context());
 #endif
         init_asio( service.get() );
         // If control got this far without an exception, then ownership has successfully been taken
@@ -396,7 +396,7 @@ public:
      * @param ep An endpoint to read settings from
      * @param ec Set to indicate what error occurred, if any.
      */
-    void listen(lib::asio::ip::tcp::endpoint const & ep, lib::error_code & ec)
+    void listen(lib::asio::ip::tcp::endpoint const & ep, std::error_code & ec)
     {
         if (m_state != READY) {
             m_elog->write(log::elevel::library,
@@ -433,7 +433,7 @@ public:
         
         // Success
         m_state = LISTENING;
-        ec = lib::error_code();
+        ec = std::error_code();
     }
 
     /// Set up endpoint for listening with protocol and port (exception free)
@@ -452,7 +452,7 @@ public:
      */
     template <typename InternetProtocol>
     void listen(InternetProtocol const & internet_protocol, uint16_t port,
-        lib::error_code & ec)
+        std::error_code & ec)
     {
         lib::asio::ip::tcp::endpoint ep(internet_protocol, port);
         listen(ep,ec);
@@ -470,7 +470,7 @@ public:
      * @param port The port to listen on.
      * @param ec Set to indicate what error occurred, if any.
      */
-    void listen(uint16_t port, lib::error_code & ec) {
+    void listen(uint16_t port, std::error_code & ec) {
         listen(lib::asio::ip::tcp::v6(), port, ec);
     }
 
@@ -489,7 +489,7 @@ public:
      * new connections. See the documentation for stop listening for more details
      * about shutting down Asio Transport based endpoints.
      *
-     * @see stop_listening(lib::error_code &)
+     * @see stop_listening(std::error_code &)
      *
      * @param host A string identifying a location. May be a descriptive name or
      * a numeric address string.
@@ -499,7 +499,7 @@ public:
      */
 #if BOOST_VERSION < 108700
     void listen(std::string const & host, std::string const & service,
-        lib::error_code & ec)
+        std::error_code & ec)
     {
         using lib::asio::ip::tcp;
         tcp::resolver r(*m_io_service);
@@ -529,7 +529,7 @@ public:
      * @since 0.3.0-alpha4
      * @param ec A status code indicating an error, if any.
      */
-    void stop_listening(lib::error_code & ec) {
+    void stop_listening(std::error_code & ec) {
         if (m_state != LISTENING) {
             m_elog->write(log::elevel::library,
                 "asio::listen called from the wrong state");
@@ -540,7 +540,7 @@ public:
 
         m_acceptor->close();
         m_state = READY;
-        ec = lib::error_code();
+        ec = std::error_code();
     }
 
 #ifndef _WEBSOCKETPP_NO_EXCEPTIONS_
@@ -553,7 +553,7 @@ public:
      * @param ep An endpoint to read settings from
      */
     void listen(lib::asio::ip::tcp::endpoint const & ep) {
-        lib::error_code ec;
+        std::error_code ec;
         listen(ep,ec);
         if (ec) { throw exception(ec); }
     }
@@ -619,7 +619,7 @@ public:
      */
     void listen(std::string const & host, std::string const & service)
     {
-        lib::error_code ec;
+        std::error_code ec;
         listen(host,service,ec);
         if (ec) { throw exception(ec); }
     }
@@ -632,7 +632,7 @@ public:
      * @since 0.3.0-alpha4
      */
     void stop_listening() {
-        lib::error_code ec;
+        std::error_code ec;
         stop_listening(ec);
         if (ec) { throw exception(ec); }
     }
@@ -727,18 +727,18 @@ public:
      * needed.
      */
     timer_ptr set_timer(long duration, timer_handler callback) {
-        timer_ptr new_timer = lib::make_shared<lib::asio::steady_timer>(
+        timer_ptr new_timer = std::make_shared<lib::asio::steady_timer>(
             *m_io_service,
              lib::asio::milliseconds(duration)
         );
 
         new_timer->async_wait(
-            lib::bind(
+            std::bind(
                 &type::handle_timer,
                 this,
                 new_timer,
                 callback,
-                lib::placeholders::_1
+                std::placeholders::_1
             )
         );
 
@@ -767,7 +767,7 @@ public:
                 callback(socket_con_type::translate_ec(ec));
             }
         } else {
-            callback(lib::error_code());
+            callback(std::error_code());
         }
     }
 
@@ -778,7 +778,7 @@ public:
      * @param ec A status code indicating an error, if any.
      */
     void async_accept(transport_con_ptr tcon, accept_handler callback,
-        lib::error_code & ec)
+        std::error_code & ec)
     {
         if (m_state != LISTENING || !m_acceptor) {
             using websocketpp::error::make_error_code;
@@ -801,11 +801,11 @@ public:
         } else {
             m_acceptor->async_accept(
                 tcon->get_raw_socket(),
-                lib::bind(
+                std::bind(
                     &type::handle_accept,
                     this,
                     callback,
-                    lib::placeholders::_1
+                    std::placeholders::_1
                 )
             );
         }
@@ -818,7 +818,7 @@ public:
      * @param callback The function to call when the operation is complete.
      */
     void async_accept(transport_con_ptr tcon, accept_handler callback) {
-        lib::error_code ec;
+        std::error_code ec;
         async_accept(tcon,callback,ec);
         if (ec) { throw exception(ec); }
     }
@@ -834,7 +834,7 @@ protected:
      * haven't been constructed yet, and cannot be used in the transport
      * destructor as they will have been destroyed by then.
      */
-    void init_logging(const lib::shared_ptr<alog_type>& a, const lib::shared_ptr<elog_type>& e) {
+    void init_logging(const std::shared_ptr<alog_type>& a, const std::shared_ptr<elog_type>& e) {
         m_alog = a;
         m_elog = e;
     }
@@ -842,7 +842,7 @@ protected:
     void handle_accept(accept_handler callback, lib::asio::error_code const & 
         asio_ec)
     {
-        lib::error_code ret_ec;
+        std::error_code ret_ec;
 
         m_alog->write(log::alevel::devel, "asio::handle_accept");
 
@@ -878,9 +878,9 @@ protected:
             host = u->get_host();
             port = u->get_port_str();
         } else {
-            lib::error_code ec;
+            std::error_code ec;
 
-            uri_ptr pu = lib::make_shared<uri>(proxy);
+            uri_ptr pu = std::make_shared<uri>(proxy);
 
             if (!pu->get_valid()) {
                 cb(make_error_code(error::proxy_invalid));
@@ -908,12 +908,12 @@ protected:
 
         dns_timer = tcon->set_timer(
             config::timeout_dns_resolve,
-            lib::bind(
+            std::bind(
                 &type::handle_resolve_timeout,
                 this,
                 dns_timer,
                 cb,
-                lib::placeholders::_1
+                std::placeholders::_1
             )
         );
 
@@ -931,14 +931,14 @@ protected:
         } else {
             m_resolver->async_resolve(
               query.host_name(), query.service_name(),
-                lib::bind(
+                std::bind(
                     &type::handle_resolve,
                     this,
                     tcon,
                     dns_timer,
                     cb,
-                    lib::placeholders::_1,
-                    lib::placeholders::_2
+                    std::placeholders::_1,
+                    std::placeholders::_2
                 )
             );
         }
@@ -954,9 +954,9 @@ protected:
      * @param ec A status code indicating an error, if any.
      */
     void handle_resolve_timeout(timer_ptr, connect_handler callback,
-        lib::error_code const & ec)
+        std::error_code const & ec)
     {
-        lib::error_code ret_ec;
+        std::error_code ret_ec;
 
         if (ec) {
             if (ec == transport::error::operation_aborted) {
@@ -1012,13 +1012,13 @@ protected:
 
         con_timer = tcon->set_timer(
             config::timeout_connect,
-            lib::bind(
+            std::bind(
                 &type::handle_connect_timeout,
                 this,
                 tcon,
                 con_timer,
                 callback,
-                lib::placeholders::_1
+                std::placeholders::_1
             )
         );
 
@@ -1037,13 +1037,13 @@ protected:
             lib::asio::async_connect(
                 tcon->get_raw_socket(),
                 iterator,
-                lib::bind(
+                std::bind(
                     &type::handle_connect,
                     this,
                     tcon,
                     con_timer,
                     callback,
-                    lib::placeholders::_1
+                    std::placeholders::_1
                 )
             );
         }
@@ -1060,9 +1060,9 @@ protected:
      * @param ec A status code indicating an error, if any.
      */
     void handle_connect_timeout(transport_con_ptr tcon, timer_ptr,
-        connect_handler callback, lib::error_code const & ec)
+        connect_handler callback, std::error_code const & ec)
     {
-        lib::error_code ret_ec;
+        std::error_code ret_ec;
 
         if (ec) {
             if (ec == transport::error::operation_aborted) {
@@ -1105,7 +1105,7 @@ protected:
                 "Async connect to "+tcon->get_remote_endpoint()+" successful.");
         }
 
-        callback(lib::error_code());
+        callback(std::error_code());
     }
 
     /// Initialize a connection
@@ -1119,14 +1119,14 @@ protected:
      *
      * @return A status code indicating the success or failure of the operation
      */
-    lib::error_code init(transport_con_ptr tcon) {
+    std::error_code init(transport_con_ptr tcon) {
         m_alog->write(log::alevel::devel, "transport::asio::init");
 
         // Initialize the connection socket component
-        socket_type::init(lib::static_pointer_cast<socket_con_type,
+        socket_type::init(std::static_pointer_cast<socket_con_type,
             transport_con_type>(tcon));
 
-        lib::error_code ec;
+        std::error_code ec;
 
         ec = tcon->init_asio(m_io_service);
         if (ec) {return ec;}
@@ -1134,7 +1134,7 @@ protected:
         tcon->set_tcp_pre_init_handler(m_tcp_pre_init_handler);
         tcon->set_tcp_post_init_handler(m_tcp_post_init_handler);
 
-        return lib::error_code();
+        return std::error_code();
     }
 private:
     /// Convenience method for logging the code and message for an error_code
@@ -1147,7 +1147,7 @@ private:
 
     /// Helper for cleaning up in the listen method after an error
     template <typename error_type>
-    lib::error_code clean_up_listen_after_error(error_type const & ec) {
+    std::error_code clean_up_listen_after_error(error_type const & ec) {
         if (m_acceptor->is_open()) {
             m_acceptor->close();
         }
@@ -1177,8 +1177,8 @@ private:
     int                 m_listen_backlog;
     bool                m_reuse_addr;
 
-    lib::shared_ptr<elog_type> m_elog;
-    lib::shared_ptr<alog_type> m_alog;
+    std::shared_ptr<elog_type> m_elog;
+    std::shared_ptr<alog_type> m_alog;
 
     // Transport state
     state               m_state;

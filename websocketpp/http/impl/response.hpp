@@ -39,10 +39,10 @@ namespace websocketpp {
 namespace http {
 namespace parser {
 
-inline size_t response::consume(char const * buf, size_t len, lib::error_code & ec) {
+inline size_t response::consume(char const * buf, size_t len, std::error_code & ec) {
     if (m_state == DONE) {
         // the response is already complete. End immediately without reading.
-        ec = lib::error_code();
+        ec = std::error_code();
         return 0;
     }
 
@@ -97,7 +97,7 @@ inline size_t response::consume(char const * buf, size_t len, lib::error_code & 
 
             m_read += len;
 
-            ec = lib::error_code();
+            ec = std::error_code();
             return len;
         }
 
@@ -164,7 +164,7 @@ inline size_t response::consume(char const * buf, size_t len, lib::error_code & 
             // frees memory used temporarily during header parsing
             m_buf.reset();
 
-            ec = lib::error_code();
+            ec = std::error_code();
             return read;
         } else {
             // we got a line 
@@ -186,7 +186,7 @@ inline size_t response::consume(char const * buf, size_t len, lib::error_code & 
     }
 }
 
-inline size_t response::consume(std::istream & s, lib::error_code & ec) {
+inline size_t response::consume(std::istream & s, std::error_code & ec) {
     char buf[istream_buffer];
     size_t bytes_read;
     size_t bytes_processed;
@@ -256,17 +256,17 @@ inline std::string response::raw() const {
     return ret.str();
 }
 
-inline lib::error_code response::set_status(status_code::value code) {
+inline std::error_code response::set_status(status_code::value code) {
     // In theory the type of status_code::value should prevent setting any
     // invalid values. Messages are canned and looked up and known to be
     // valid.
     // TODO: Is there anything else that would need validation here?
     m_status_code = code;
     m_status_msg = get_string(code);
-    return lib::error_code();
+    return std::error_code();
 }
 
-inline lib::error_code response::set_status(status_code::value code,
+inline std::error_code response::set_status(status_code::value code,
     std::string const & msg)
 {
     // In theory the type of status_code::value should prevent setting any
@@ -280,10 +280,10 @@ inline lib::error_code response::set_status(status_code::value code,
     // LWS = [CRLF] 1*( SP | HT )
     m_status_code = code;
     m_status_msg = msg;
-    return lib::error_code();
+    return std::error_code();
 }
 
-inline lib::error_code response::process(std::string::iterator begin,
+inline std::error_code response::process(std::string::iterator begin,
     std::string::iterator end)
 {
     std::string::iterator cursor_start = begin;
@@ -319,11 +319,11 @@ inline lib::error_code response::process(std::string::iterator begin,
     return set_status(status_code::value(code),std::string(cursor_end+1,end));
 }
 
-inline size_t response::process_body(char const * buf, size_t len, lib::error_code & ec) {
+inline size_t response::process_body(char const * buf, size_t len, std::error_code & ec) {
     // If no content length was set then we read forever and never set m_ready
     if (m_read == 0) {
         m_state = DONE;
-        ec = lib::error_code();
+        ec = std::error_code();
         return 0;
     }
 
@@ -342,7 +342,7 @@ inline size_t response::process_body(char const * buf, size_t len, lib::error_co
 
     m_body.append(buf,to_read);
     m_read -= to_read;
-    ec = lib::error_code();
+    ec = std::error_code();
     return to_read;
 }
 

@@ -34,8 +34,9 @@
 #include <syslog.h>
 
 #include <websocketpp/logger/basic.hpp>
-
 #include <websocketpp/common/cpp11.hpp>
+
+
 #include <websocketpp/logger/levels.hpp>
 
 namespace websocketpp {

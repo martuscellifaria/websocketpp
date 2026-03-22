@@ -34,7 +34,7 @@
 #include <websocketpp/transport/asio/security/base.hpp>
 
 #include <websocketpp/common/asio.hpp>
-#include <websocketpp/common/memory.hpp>
+#include <memory>
 
 #include <sstream>
 #include <string>
@@ -47,7 +47,7 @@ namespace asio {
 namespace basic_socket {
 
 /// The signature of the socket init handler for this socket policy
-typedef lib::function<void(connection_hdl,lib::asio::ip::tcp::socket&)>
+typedef std::function<void(connection_hdl,lib::asio::ip::tcp::socket&)>
     socket_init_handler;
 
 /// Basic Asio connection socket component
@@ -55,21 +55,21 @@ typedef lib::function<void(connection_hdl,lib::asio::ip::tcp::socket&)>
  * transport::asio::basic_socket::connection implements a connection socket
  * component using Asio ip::tcp::socket.
  */
-class connection : public lib::enable_shared_from_this<connection> {
+class connection : public std::enable_shared_from_this<connection> {
 public:
     /// Type of this connection socket component
     typedef connection type;
     /// Type of a shared pointer to this connection socket component
-    typedef lib::shared_ptr<type> ptr;
+    typedef std::shared_ptr<type> ptr;
 
     /// Type of a pointer to the Asio io_service being used
     typedef lib::asio::io_context* io_service_ptr;
     /// Type of a pointer to the Asio io_service strand being used
-    typedef lib::shared_ptr<lib::asio::io_context::strand> strand_ptr;
+    typedef std::shared_ptr<lib::asio::io_context::strand> strand_ptr;
     /// Type of the ASIO socket being used
     typedef lib::asio::ip::tcp::socket socket_type;
     /// Type of a shared pointer to the socket being used.
-    typedef lib::shared_ptr<socket_type> socket_ptr;
+    typedef std::shared_ptr<socket_type> socket_ptr;
 
     explicit connection() : m_state(UNINITIALIZED) {
         //std::cout << "transport::asio::basic_socket::connection constructor"
@@ -135,7 +135,7 @@ public:
      *
      * @return A string identifying the address of the remote endpoint
      */
-    std::string get_remote_endpoint(lib::error_code & ec) const {
+    std::string get_remote_endpoint(std::error_code & ec) const {
         std::stringstream s;
 
         lib::asio::error_code aec;
@@ -147,7 +147,7 @@ public:
                << " (" << aec.message() << ")";
             return s.str();
         } else {
-            ec = lib::error_code();
+            ec = std::error_code();
             s << ep;
             return s.str();
         }
@@ -163,7 +163,7 @@ protected:
      * @param strand A shared pointer to the connection's asio strand
      * @param is_server Whether or not the endpoint is a server or not.
      */
-    lib::error_code init_asio (io_service_ptr service, strand_ptr, bool)
+    std::error_code init_asio (io_service_ptr service, strand_ptr, bool)
     {
         if (m_state != UNINITIALIZED) {
             return socket::make_error_code(socket::error::invalid_state);
@@ -173,7 +173,7 @@ protected:
 
         m_state = READY;
 
-        return lib::error_code();
+        return std::error_code();
     }
 
     /// Set uri hook
@@ -210,7 +210,7 @@ protected:
 
         m_state = READING;
 
-        callback(lib::error_code());
+        callback(std::error_code());
     }
 
     /// Post-initialize security policy
@@ -222,7 +222,7 @@ protected:
      * @param callback Handler to call back with completion information
      */
     void post_init(init_handler callback) {
-        callback(lib::error_code());
+        callback(std::error_code());
     }
 
     /// Sets the connection handle
@@ -257,8 +257,8 @@ protected:
         h(ec);
     }
 
-    lib::error_code get_ec() const {
-        return lib::error_code();
+    std::error_code get_ec() const {
+        return std::error_code();
     }
 
 public:
@@ -275,15 +275,15 @@ public:
      */
     template <typename ErrorCodeType>
     static
-    lib::error_code translate_ec(ErrorCodeType) {
+    std::error_code translate_ec(ErrorCodeType) {
         // We don't know any more information about this error so pass through
         return make_error_code(transport::error::pass_through);
     }
 
     static
-    /// Overload of translate_ec to catch cases where lib::error_code is the 
+    /// Overload of translate_ec to catch cases where std::error_code is the 
     /// same type as lib::asio::error_code
-    lib::error_code translate_ec(lib::error_code ec) {
+    std::error_code translate_ec(std::error_code ec) {
         // We don't know any more information about this error, but the error is
         // the same type as the one we are translating to, so pass through
         // untranslated.
@@ -350,9 +350,9 @@ protected:
      *
      * @return Error code (empty on success)
      */
-    lib::error_code init(socket_con_ptr scon) {
+    std::error_code init(socket_con_ptr scon) {
         scon->set_socket_init_handler(m_socket_init_handler);
-        return lib::error_code();
+        return std::error_code();
     }
 private:
     socket_init_handler m_socket_init_handler;

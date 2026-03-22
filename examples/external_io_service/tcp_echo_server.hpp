@@ -32,21 +32,21 @@
  */ 
 
 #include <websocketpp/common/asio.hpp>
-#include <websocketpp/common/memory.hpp>
-#include <websocketpp/common/functional.hpp>
+#include <memory>
+#include <functional>
 
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
-struct tcp_echo_session : websocketpp::lib::enable_shared_from_this<tcp_echo_session> {
-    typedef websocketpp::lib::shared_ptr<tcp_echo_session> ptr;
+struct tcp_echo_session : std::enable_shared_from_this<tcp_echo_session> {
+    typedef std::shared_ptr<tcp_echo_session> ptr;
     
     tcp_echo_session(asio::io_context & service) : m_socket(service) {}
 
     void start() {
         m_socket.async_read_some(asio::buffer(m_buffer, sizeof(m_buffer)),
-            websocketpp::lib::bind(
+            std::bind(
                 &tcp_echo_session::handle_read, shared_from_this(), _1, _2));
     }
     

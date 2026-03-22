@@ -84,8 +84,8 @@ int main(int argc, char * argv[]) {
         echo_server.init_asio();
         
         // Register our message handler
-        using websocketpp::lib::placeholders::_1;
-        using websocketpp::lib::placeholders::_2;
+        using std::placeholders::_1;
+        using std::placeholders::_2;
         echo_server.set_message_handler(bind(&on_message,&echo_server,_1,_2));
         
         // Listen on port 9002

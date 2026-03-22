@@ -36,7 +36,7 @@
 
 #include <asio.hpp>
 #include <asio/steady_timer.hpp>
-#include <websocketpp/common/chrono.hpp> 
+#include <chrono>
 
 namespace websocketpp {
 namespace lib {
@@ -49,8 +49,8 @@ namespace lib {
         bool is_neg(T duration) {
             return duration.count() < 0;
         }
-        inline lib::chrono::milliseconds milliseconds(long duration) {
-            return lib::chrono::milliseconds(duration);
+        inline std::chrono::milliseconds milliseconds(long duration) {
+            return std::chrono::milliseconds(duration);
         }
     } // namespace asio
     

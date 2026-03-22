@@ -31,11 +31,11 @@
 #include <iostream>
 
 typedef websocketpp::client<websocketpp::config::asio_tls_client> client;
-typedef websocketpp::lib::shared_ptr<websocketpp::lib::asio::ssl::context> context_ptr;
+typedef std::shared_ptr<websocketpp::lib::asio::ssl::context> context_ptr;
 
-using websocketpp::lib::placeholders::_1;
-using websocketpp::lib::placeholders::_2;
-using websocketpp::lib::bind;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::bind;
 
 void on_message(websocketpp::connection_hdl, client::message_ptr msg) {
     std::cout << msg->get_payload() << std::endl;
@@ -176,7 +176,7 @@ bool verify_certificate(const char * hostname, bool preverified, asio::ssl::veri
  * (websocketpp.org, for example).
  */
 context_ptr on_tls_init(const char * hostname, websocketpp::connection_hdl) {
-    context_ptr ctx = websocketpp::lib::make_shared<asio::ssl::context>(asio::ssl::context::sslv23);
+    context_ptr ctx = std::make_shared<asio::ssl::context>(asio::ssl::context::sslv23);
 
     try {
         ctx->set_options(asio::ssl::context::default_workarounds |

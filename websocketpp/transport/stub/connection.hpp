@@ -35,7 +35,7 @@
 #include <websocketpp/logger/levels.hpp>
 
 #include <websocketpp/common/connection_hdl.hpp>
-#include <websocketpp/common/memory.hpp>
+#include <memory>
 #include <websocketpp/common/platforms.hpp>
 
 #include <string>
@@ -52,12 +52,12 @@ struct timer {
 };
 
 template <typename config>
-class connection : public lib::enable_shared_from_this< connection<config> > {
+class connection : public std::enable_shared_from_this< connection<config> > {
 public:
     /// Type of this connection transport component
     typedef connection<config> type;
     /// Type of a shared pointer to this connection transport component
-    typedef lib::shared_ptr<type> ptr;
+    typedef std::shared_ptr<type> ptr;
 
     /// transport concurrency policy
     typedef typename config::concurrency_type concurrency_type;
@@ -70,9 +70,9 @@ public:
     typedef typename concurrency_type::scoped_lock_type scoped_lock_type;
     typedef typename concurrency_type::mutex_type mutex_type;
 
-    typedef lib::shared_ptr<timer> timer_ptr;
+    typedef std::shared_ptr<timer> timer_ptr;
 
-    explicit connection(bool is_server, const lib::shared_ptr<alog_type> & alog, const lib::shared_ptr<elog_type> & elog)
+    explicit connection(bool is_server, const std::shared_ptr<alog_type> & alog, const std::shared_ptr<elog_type> & elog)
       : m_alog(alog), m_elog(elog)
     {
         m_alog->write(log::alevel::devel,"stub con transport constructor");
@@ -260,9 +260,9 @@ protected:
      * @return Whether or not the transport was able to register the handler for
      * callback.
      */
-    lib::error_code dispatch(dispatch_handler handler) {
+    std::error_code dispatch(dispatch_handler handler) {
         handler();
-        return lib::error_code();
+        return std::error_code();
     }
 
     /// Perform cleanup on socket shutdown_handler
@@ -270,12 +270,12 @@ protected:
      * @param h The `shutdown_handler` to call back when complete
      */
     void async_shutdown(shutdown_handler handler) {
-        handler(lib::error_code());
+        handler(std::error_code());
     }
 private:
     // member variables!
-    lib::shared_ptr<alog_type> m_alog;
-    lib::shared_ptr<elog_type> m_elog;
+    std::shared_ptr<alog_type> m_alog;
+    std::shared_ptr<elog_type> m_elog;
 };
 
 

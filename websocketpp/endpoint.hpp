@@ -481,7 +481,7 @@ public:
      * default and an exception free varient.
      */
 
-    void interrupt(connection_hdl hdl, lib::error_code & ec);
+    void interrupt(connection_hdl hdl, std::error_code & ec);
     void interrupt(connection_hdl hdl);
 
     /// Pause reading of new data (exception free)
@@ -504,7 +504,7 @@ public:
      *
      * If reading is paused for this connection already nothing is changed.
      */
-    void pause_reading(connection_hdl hdl, lib::error_code & ec);
+    void pause_reading(connection_hdl hdl, std::error_code & ec);
     
     /// Pause reading of new data
     void pause_reading(connection_hdl hdl);
@@ -516,7 +516,7 @@ public:
      *
      * If reading is not paused for this connection already nothing is changed.
      */
-    void resume_reading(connection_hdl hdl, lib::error_code & ec);
+    void resume_reading(connection_hdl hdl, std::error_code & ec);
 
     /// Resume reading of new data
     void resume_reading(connection_hdl hdl);
@@ -534,7 +534,7 @@ public:
      * @param hdl The connection to send the response on
      * @param ec A status code, zero on success, non-zero otherwise
      */
-    void send_http_response(connection_hdl hdl, lib::error_code & ec);
+    void send_http_response(connection_hdl hdl, std::error_code & ec);
         
     /// Send deferred HTTP Response (exception free)
     /**
@@ -560,7 +560,7 @@ public:
      * @param [out] ec A code to fill in for errors
      */
     void send(connection_hdl hdl, std::string const & payload,
-        frame::opcode::value op, lib::error_code & ec);
+        frame::opcode::value op, std::error_code & ec);
     /// Create a message and add it to the outgoing send queue
     /**
      * Convenience method to send a message given a payload string and an opcode
@@ -574,15 +574,15 @@ public:
         frame::opcode::value op);
 
     void send(connection_hdl hdl, void const * payload, size_t len,
-        frame::opcode::value op, lib::error_code & ec);
+        frame::opcode::value op, std::error_code & ec);
     void send(connection_hdl hdl, void const * payload, size_t len,
         frame::opcode::value op);
 
-    void send(connection_hdl hdl, message_ptr msg, lib::error_code & ec);
+    void send(connection_hdl hdl, message_ptr msg, std::error_code & ec);
     void send(connection_hdl hdl, message_ptr msg);
 
     void close(connection_hdl hdl, close::status::value const code,
-        std::string const & reason, lib::error_code & ec);
+        std::string const & reason, std::error_code & ec);
     void close(connection_hdl hdl, close::status::value const code,
         std::string const & reason);
 
@@ -595,7 +595,7 @@ public:
      * @param [out] ec A reference to an error code to fill in
      */
     void ping(connection_hdl hdl, std::string const & payload,
-        lib::error_code & ec);
+        std::error_code & ec);
     /// Send a ping to a specific connection
     /**
      * Exception variant of `ping`
@@ -616,7 +616,7 @@ public:
      * @param [out] ec A reference to an error code to fill in
      */
     void pong(connection_hdl hdl, std::string const & payload,
-        lib::error_code & ec);
+        std::error_code & ec);
     /// Send a pong to a specific connection
     /**
      * Exception variant of `pong`
@@ -642,8 +642,8 @@ public:
      *
      * @return the connection_ptr. May be NULL if the handle was invalid.
      */
-    connection_ptr get_con_from_hdl(connection_hdl hdl, lib::error_code & ec) {
-        connection_ptr con = lib::static_pointer_cast<connection_type>(
+    connection_ptr get_con_from_hdl(connection_hdl hdl, std::error_code & ec) {
+        connection_ptr con = std::static_pointer_cast<connection_type>(
             hdl.lock());
         if (!con) {
             ec = error::make_error_code(error::bad_connection);
@@ -654,7 +654,7 @@ public:
 #ifndef _WEBSOCKETPP_NO_EXCEPTIONS_
     /// Retrieves a connection_ptr from a connection_hdl (exception version)
     connection_ptr get_con_from_hdl(connection_hdl hdl) {
-        lib::error_code ec;
+        std::error_code ec;
         connection_ptr con = this->get_con_from_hdl(hdl,ec);
         if (ec) {
             throw exception(ec);
@@ -663,10 +663,10 @@ public:
     }
 #endif // _WEBSOCKETPP_NO_EXCEPTIONS_
 protected:
-    connection_ptr create_connection(lib::error_code & ec);
+    connection_ptr create_connection(std::error_code & ec);
 
-    lib::shared_ptr<alog_type> m_alog;
-    lib::shared_ptr<elog_type> m_elog;
+    std::shared_ptr<alog_type> m_alog;
+    std::shared_ptr<elog_type> m_elog;
 private:
     // dynamic settings
     std::string                 m_user_agent;

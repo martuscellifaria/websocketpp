@@ -28,11 +28,12 @@
 #ifndef WEBSOCKETPP_TRANSPORT_ASIO_SOCKET_BASE_HPP
 #define WEBSOCKETPP_TRANSPORT_ASIO_SOCKET_BASE_HPP
 
-#include <websocketpp/common/asio.hpp>
-#include <websocketpp/common/memory.hpp>
-#include <websocketpp/common/functional.hpp>
-#include <websocketpp/common/system_error.hpp>
 #include <websocketpp/common/cpp11.hpp>
+#include <websocketpp/common/asio.hpp>
+#include <memory>
+#include <functional>
+#include <websocketpp/common/system_error.hpp>
+
 #include <websocketpp/common/connection_hdl.hpp>
 
 #include <string>
@@ -45,7 +46,7 @@
  * bool is_secure() const;
  * @return Whether or not the endpoint creates secure connections
  *
- * lib::error_code init(socket_con_ptr scon);
+ * std::error_code init(socket_con_ptr scon);
  * Called by the transport after a new connection is created to initialize
  * the socket component of the connection.
  * @param scon Pointer to the socket component of the connection
@@ -64,7 +65,7 @@ namespace transport {
 namespace asio {
 namespace socket {
 
-typedef lib::function<void(lib::asio::error_code const &)> shutdown_handler;
+typedef std::function<void(lib::asio::error_code const &)> shutdown_handler;
 
 /**
  * The transport::asio::socket::* classes are a set of security/socket related
@@ -107,7 +108,7 @@ namespace error {
 } // namespace error
 
 /// Error category related to asio transport socket policies
-class socket_category : public lib::error_category {
+class socket_category : public std::error_category {
 public:
     char const * name() const _WEBSOCKETPP_NOEXCEPT_TOKEN_ {
         return "websocketpp.transport.asio.socket";
@@ -139,17 +140,17 @@ public:
     }
 };
 
-inline lib::error_category const & get_socket_category() {
+inline std::error_category const & get_socket_category() {
     static socket_category instance;
     return instance;
 }
 
-inline lib::error_code make_error_code(error::value e) {
-    return lib::error_code(static_cast<int>(e), get_socket_category());
+inline std::error_code make_error_code(error::value e) {
+    return std::error_code(static_cast<int>(e), get_socket_category());
 }
 
 /// Type of asio transport socket policy initialization handlers
-typedef lib::function<void(const lib::error_code&)> init_handler;
+typedef std::function<void(const std::error_code&)> init_handler;
 
 } // namespace socket
 } // namespace asio
