@@ -36,6 +36,8 @@
 #include <stdint.h>
 #include <websocketpp/common/system_error.hpp>
 #include <websocketpp/error.hpp>
+#include <print>
+#include <iostream>
 
 #include <websocketpp/extensions/extension.hpp>
 
@@ -248,15 +250,13 @@ public:
         int ret = deflateEnd(&m_dstate);
 
         if (ret != Z_OK) {
-            //std::cout << "error cleaning up zlib compression state"
-            //          << std::endl;
+	    std::println(std::cerr, "error cleaning up zlib compression state");
         }
 
         ret = inflateEnd(&m_istate);
 
         if (ret != Z_OK) {
-            //std::cout << "error cleaning up zlib decompression state"
-            //          << std::endl;
+	    std::println(std::cerr, "error cleaning up zlib compression state");
         }
     }
 

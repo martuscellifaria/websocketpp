@@ -1,7 +1,7 @@
-WebSocket++ (0.8.2.1)
+WebSocket++ Reloaded (0.9)
 ==========================
 
-Note from the "Forker" Author
+Note from the Fork Author
 =================================
 **The official WebSocket++ hasn't got any updates since 2020**
 This is a personal fork and addresses a few outdated stuff, asio support and so on.

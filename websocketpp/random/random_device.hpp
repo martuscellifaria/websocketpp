@@ -49,8 +49,8 @@ namespace random_device {
 template <typename int_type, typename concurrency>
 class int_generator {
     public:
-        typedef typename concurrency::scoped_lock_type scoped_lock_type;
-        typedef typename concurrency::mutex_type mutex_type;
+        using scoped_lock_type = concurrency::scoped_lock_type;
+        using mutex_type = concurrency::mutex_type;
 
         /// constructor
         int_generator() {}
