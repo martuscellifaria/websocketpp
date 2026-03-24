@@ -29,7 +29,7 @@
 #define WEBSOCKETPP_TRANSPORT_STUB_BASE_HPP
 
 #include <websocketpp/common/system_error.hpp>
-#include <websocketpp/common/cpp11.hpp>
+
 
 #include <string>
 
@@ -54,7 +54,7 @@ class category : public std::error_category {
     public:
     category() {}
 
-    char const * name() const _WEBSOCKETPP_NOEXCEPT_TOKEN_ {
+    char const * name() const noexcept {
         return "websocketpp.transport.stub";
     }
 

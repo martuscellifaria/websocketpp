@@ -398,7 +398,7 @@ inline status_code::value get_status_code(error::value value) {
 /// HTTP parser error category
 class category : public std::error_category {
 public:
-    char const * name() const _WEBSOCKETPP_NOEXCEPT_TOKEN_ {
+    char const * name() const noexcept {
         return "websocketpp.http";
     }
 

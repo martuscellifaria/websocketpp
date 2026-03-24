@@ -28,7 +28,7 @@
 #ifndef WEBSOCKETPP_TRANSPORT_ASIO_SOCKET_BASE_HPP
 #define WEBSOCKETPP_TRANSPORT_ASIO_SOCKET_BASE_HPP
 
-#include <websocketpp/common/cpp11.hpp>
+
 #include <websocketpp/common/asio.hpp>
 #include <memory>
 #include <functional>
@@ -110,7 +110,7 @@ namespace error {
 /// Error category related to asio transport socket policies
 class socket_category : public std::error_category {
 public:
-    char const * name() const _WEBSOCKETPP_NOEXCEPT_TOKEN_ {
+    char const * name() const noexcept {
         return "websocketpp.transport.asio.socket";
     }
 

@@ -27,7 +27,7 @@
 
 #ifndef WEBSOCKETPP_CONFIG_MINIMAL_HPP
 #define WEBSOCKETPP_CONFIG_MINIMAL_HPP
-#include <websocketpp/common/cpp11.hpp>
+
 
 // Non-Policy common stuff
 #include <websocketpp/common/platforms.hpp>

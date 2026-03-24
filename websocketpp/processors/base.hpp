@@ -31,7 +31,7 @@
 #include <websocketpp/close.hpp>
 #include <websocketpp/utilities.hpp>
 #include <websocketpp/uri.hpp>
-#include <websocketpp/common/cpp11.hpp>
+
 
 
 #include <websocketpp/common/system_error.hpp>
@@ -163,7 +163,7 @@ class processor_category : public std::error_category {
 public:
     processor_category() {}
 
-    char const * name() const _WEBSOCKETPP_NOEXCEPT_TOKEN_ {
+    char const * name() const noexcept {
         return "websocketpp.processor";
     }
 

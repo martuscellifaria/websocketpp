@@ -52,7 +52,7 @@ public:
      * @param hint A channel type specific hint for how to construct the logger
      */
     stub(level, channel_type_hint::value) {}
-    _WEBSOCKETPP_CONSTEXPR_TOKEN_ stub() {}
+    constexpr stub() {}
 
     /// Dynamically enable the given list of channels
     /**
@@ -97,7 +97,7 @@ public:
      *
      * @param channel The package of channels to test
      */
-    _WEBSOCKETPP_CONSTEXPR_TOKEN_ bool static_test(level) const {
+    constexpr bool static_test(level) const {
         return false;
     }
 

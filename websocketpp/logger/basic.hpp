@@ -41,7 +41,7 @@
  */
 
 #include <websocketpp/logger/levels.hpp>
-#include <websocketpp/common/cpp11.hpp>
+
 
 
 #include <stdint.h>
@@ -90,25 +90,13 @@ public:
      , m_out(other.m_out)
     {}
     
-#ifdef _WEBSOCKETPP_DEFAULT_DELETE_FUNCTIONS_
-    // no copy assignment operator because of const member variables
     basic<concurrency,names> & operator=(basic<concurrency,names> const &) = delete;
-#endif // _WEBSOCKETPP_DEFAULT_DELETE_FUNCTIONS_
-
-#ifdef _WEBSOCKETPP_MOVE_SEMANTICS_
-    /// Move constructor
     basic(basic<concurrency,names> && other)
      : m_static_channels(other.m_static_channels)
      , m_dynamic_channels(other.m_dynamic_channels)
      , m_out(other.m_out)
     {}
-
-#ifdef _WEBSOCKETPP_DEFAULT_DELETE_FUNCTIONS_
-    // no move assignment operator because of const member variables
     basic<concurrency,names> & operator=(basic<concurrency,names> &&) = delete;
-#endif // _WEBSOCKETPP_DEFAULT_DELETE_FUNCTIONS_
-
-#endif // _WEBSOCKETPP_MOVE_SEMANTICS_
 
     void set_ostream(std::ostream * out = &std::cout) {
         m_out = out;
@@ -157,7 +145,7 @@ public:
         m_out->flush();
     }
 
-    _WEBSOCKETPP_CONSTEXPR_TOKEN_ bool static_test(level channel) const {
+    constexpr bool static_test(level channel) const {
         return ((channel & m_static_channels) != 0);
     }
 

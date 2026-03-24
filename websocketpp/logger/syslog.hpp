@@ -34,7 +34,7 @@
 #include <syslog.h>
 
 #include <websocketpp/logger/basic.hpp>
-#include <websocketpp/common/cpp11.hpp>
+
 
 
 #include <websocketpp/logger/levels.hpp>
@@ -134,7 +134,7 @@ private:
      * @param channel The level to look up
      * @return The syslog level associated with `channel`
      */
-    _WEBSOCKETPP_CONSTEXPR_TOKEN_ int syslog_priority_access(level) const {
+    constexpr int syslog_priority_access(level) const {
         return default_level;
     }
 

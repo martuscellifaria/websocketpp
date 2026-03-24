@@ -54,8 +54,7 @@
   1999-05-03 lpd Original version.
  */
 
-#ifndef WEBSOCKETPP_COMMON_MD5_HPP
-#define WEBSOCKETPP_COMMON_MD5_HPP
+#pragma once
 
 /*
  * This package supports both compile-time and run-time determination of CPU
@@ -444,5 +443,3 @@ inline std::string md5_hash_hex(std::string const & input) {
 
 } // md5
 } // websocketpp
-
-#endif // WEBSOCKETPP_COMMON_MD5_HPP

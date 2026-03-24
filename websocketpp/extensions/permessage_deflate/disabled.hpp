@@ -29,7 +29,7 @@
 #define WEBSOCKETPP_EXTENSION_PERMESSAGE_DEFLATE_DISABLED_HPP
 
 
-#include <websocketpp/common/cpp11.hpp>
+
 #include <stdint.h>
 #include <websocketpp/common/system_error.hpp>
 

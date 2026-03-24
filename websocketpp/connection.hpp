@@ -27,7 +27,6 @@
 
 #ifndef WEBSOCKETPP_CONNECTION_HPP
 #define WEBSOCKETPP_CONNECTION_HPP
-#include <websocketpp/common/cpp11.hpp>
 #include <websocketpp/close.hpp>
 #include <websocketpp/error.hpp>
 #include <websocketpp/frame.hpp>
@@ -154,24 +153,7 @@ typedef std::function<void(connection_hdl)> http_handler;
 typedef std::function<void(std::error_code const & ec, size_t bytes_transferred)> read_handler;
 typedef std::function<void(std::error_code const & ec)> write_frame_handler;
 
-// constants related to the default WebSocket protocol versions available
-#ifdef _WEBSOCKETPP_INITIALIZER_LISTS_ // simplified C++11 version
-    /// Container that stores the list of protocol versions supported
-    /**
-     * @todo Move this to configs to allow compile/runtime disabling or enabling
-     * of protocol versions
-     */
-    static std::vector<int> const versions_supported = {0,7,8,13};
-#else
-    /// Helper array to get around lack of initializer lists pre C++11
-    static int const helper[] = {0,7,8,13};
-    /// Container that stores the list of protocol versions supported
-    /**
-     * @todo Move this to configs to allow compile/runtime disabling or enabling
-     * of protocol versions
-     */
-    static std::vector<int> const versions_supported(helper,helper+4);
-#endif
+static std::vector<int> const versions_supported = {0,7,8,13};
 
 namespace session {
 namespace state {
@@ -1109,15 +1091,11 @@ public:
     void set_body(std::string const & value);
 #endif // _WEBSOCKETPP_NO_EXCEPTIONS_
 
-#ifdef _WEBSOCKETPP_MOVE_SEMANTICS_
-    /// @copydoc websocketpp::connection::set_body(std::string const &, std::error_code &)
     void set_body(std::string && value, std::error_code & ec);
-
 #ifndef _WEBSOCKETPP_NO_EXCEPTIONS_
     /// @copydoc websocketpp::connection::set_body(std::string const &)
     void set_body(std::string && value);
 #endif // _WEBSOCKETPP_NO_EXCEPTIONS_
-#endif // _WEBSOCKETPP_MOVE_SEMANTICS_
 
     /// Append a header (exception free)
     /**

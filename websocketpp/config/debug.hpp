@@ -30,7 +30,7 @@
 
 
 
-#include <websocketpp/common/cpp11.hpp>
+
 // Non-Policy common stuff
 
 #include <stdint.h>

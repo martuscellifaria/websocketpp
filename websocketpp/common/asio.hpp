@@ -25,9 +25,7 @@
  *
  */
 
-#ifndef WEBSOCKETPP_COMMON_ASIO_HPP
-#define WEBSOCKETPP_COMMON_ASIO_HPP
-
+#pragma once
 #include <asio/version.hpp>
 
 #if (ASIO_VERSION/100000) == 1 && ((ASIO_VERSION/100)%1000) < 8
@@ -58,5 +56,3 @@ namespace lib {
 
 } // namespace lib
 } // namespace websocketpp
-
-#endif // WEBSOCKETPP_COMMON_ASIO_HPP

@@ -30,7 +30,7 @@
 
 
 
-#include <websocketpp/common/cpp11.hpp>
+
 #include <memory>
 #include <websocketpp/common/platforms.hpp>
 #include <stdint.h>
@@ -123,7 +123,7 @@ class category : public std::error_category {
 public:
     category() {}
 
-    char const * name() const _WEBSOCKETPP_NOEXCEPT_TOKEN_ {
+    char const * name() const noexcept {
         return "websocketpp.extension.permessage-deflate";
     }
 

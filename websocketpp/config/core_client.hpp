@@ -28,7 +28,7 @@
 #ifndef WEBSOCKETPP_CONFIG_CORE_CLIENT_HPP
 #define WEBSOCKETPP_CONFIG_CORE_CLIENT_HPP
 
-#include <websocketpp/common/cpp11.hpp>
+
 // Non-Policy common stuff
 #include <websocketpp/common/platforms.hpp>
 
