@@ -70,7 +70,9 @@ set(CMAKE_CONFIGURATION_TYPES "Release;RelWithDebInfo;Debug" CACHE STRING "Confi
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(CMakeHelpers)
 
-add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+if(!WIN32)
+    add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+endif()
 ############  Build customization
 
 # Override from command line "CMake -D<OPTION>=TRUE/FALSE/0/1/ON/OFF"
