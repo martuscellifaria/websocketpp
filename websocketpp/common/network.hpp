@@ -30,6 +30,7 @@
 
 // For ntohs and htons
 #if defined(_WIN32)
+    #pragma comment(lib, "Ws2_32.lib")
     #include <winsock2.h>
 #else
     //#include <arpa/inet.h>

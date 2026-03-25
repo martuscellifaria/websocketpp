@@ -30,6 +30,7 @@
 
 #ifndef WEBSOCKETPP_LOGGER_SYSLOG_HPP
 #define WEBSOCKETPP_LOGGER_SYSLOG_HPP
+#ifndef _WIN32
 
 #include <syslog.h>
 
@@ -145,3 +146,4 @@ private:
 } // websocketpp
 
 #endif // WEBSOCKETPP_LOGGER_SYSLOG_HPP
+#endif // SYSLOG_COMMENTED_OUT_FOR_WIN32
