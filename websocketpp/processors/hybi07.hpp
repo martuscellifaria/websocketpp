@@ -43,10 +43,10 @@ namespace processor {
 template <typename config>
 class hybi07 : public hybi08<config> {
 public:
-    typedef typename config::request_type request_type;
+    using request_type = typename config::request_type;
 
-    typedef typename config::con_msg_manager_type::ptr msg_manager_ptr;
-    typedef typename config::rng_type rng_type;
+    using msg_manager_ptr = typename config::con_msg_manager_type::ptr;
+    using rng_type = typename config::rng_type;
 
     explicit hybi07(bool secure, bool p_is_server, msg_manager_ptr manager, rng_type& rng)
       : hybi08<config>(secure, p_is_server, manager, rng) {}

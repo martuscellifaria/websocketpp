@@ -49,11 +49,9 @@ namespace asio {
 namespace tls_socket {
 
 /// The signature of the socket_init_handler for this socket policy
-typedef std::function<void(connection_hdl,lib::asio::ssl::stream<
-    lib::asio::ip::tcp::socket>&)> socket_init_handler;
+using socket_init_handler = std::function<void(connection_hdl,lib::asio::ssl::stream<lib::asio::ip::tcp::socket>&)>;
 /// The signature of the tls_init_handler for this socket policy
-typedef std::function<std::shared_ptr<lib::asio::ssl::context>(connection_hdl)>
-    tls_init_handler;
+using tls_init_handler = std::function<std::shared_ptr<lib::asio::ssl::context>(connection_hdl)>;
 
 /// TLS enabled Asio connection socket component
 /**
@@ -63,20 +61,20 @@ typedef std::function<std::shared_ptr<lib::asio::ssl::context>(connection_hdl)>
 class connection : public std::enable_shared_from_this<connection> {
 public:
     /// Type of this connection socket component
-    typedef connection type;
+    using type = connection;
     /// Type of a shared pointer to this connection socket component
-    typedef std::shared_ptr<type> ptr;
+    using ptr = std::shared_ptr<type>;
 
     /// Type of the ASIO socket being used
-    typedef lib::asio::ssl::stream<lib::asio::ip::tcp::socket> socket_type;
+    using socket_type = lib::asio::ssl::stream<lib::asio::ip::tcp::socket>;
     /// Type of a shared pointer to the ASIO socket being used
-    typedef std::shared_ptr<socket_type> socket_ptr;
+    using socket_ptr = std::shared_ptr<socket_type>;
     /// Type of a pointer to the ASIO io_service being used
-    typedef lib::asio::io_context * io_service_ptr;
+    using io_service_ptr = lib::asio::io_context *;
     /// Type of a pointer to the ASIO io_service strand being used
-    typedef std::shared_ptr<lib::asio::io_context::strand> strand_ptr;
+    using strand_ptr = std::shared_ptr<lib::asio::io_context::strand>;
     /// Type of a shared pointer to the ASIO TLS context being used
-    typedef std::shared_ptr<lib::asio::ssl::context> context_ptr;
+    using context_ptr = std::shared_ptr<lib::asio::ssl::context>;
 
     explicit connection() {
         //std::cout << "transport::asio::tls_socket::connection constructor"
@@ -405,13 +403,13 @@ private:
 class endpoint {
 public:
     /// The type of this endpoint socket component
-    typedef endpoint type;
+    using type = endpoint;
 
     /// The type of the corresponding connection socket component
-    typedef connection socket_con_type;
+    using socket_con_type = connection;
     /// The type of a shared pointer to the corresponding connection socket
     /// component.
-    typedef socket_con_type::ptr socket_con_ptr;
+    using socket_con_ptr = socket_con_type::ptr;
 
     explicit endpoint() {}
 

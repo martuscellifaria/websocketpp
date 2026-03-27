@@ -65,7 +65,7 @@ namespace transport {
 namespace asio {
 namespace socket {
 
-typedef std::function<void(lib::asio::error_code const &)> shutdown_handler;
+using shutdown_handler = std::function<void(lib::asio::error_code const &)>;
 
 /**
  * The transport::asio::socket::* classes are a set of security/socket related
@@ -150,7 +150,7 @@ inline std::error_code make_error_code(error::value e) {
 }
 
 /// Type of asio transport socket policy initialization handlers
-typedef std::function<void(const std::error_code&)> init_handler;
+using init_handler = std::function<void(const std::error_code&)>;
 
 } // namespace socket
 } // namespace asio

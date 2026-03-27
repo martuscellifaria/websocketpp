@@ -160,10 +160,10 @@ namespace alloc {
 template <typename message>
 class con_msg_manager {
 public:
-    typedef std::shared_ptr<con_msg_manager> ptr;
-    typedef std::weak_ptr<con_msg_manager> weak_ptr;
+    using ptr = std::shared_ptr<con_msg_manager>;
+    using weak_ptr = std::weak_ptr<con_msg_manager>;
 
-    typedef typename message::ptr message_ptr;
+    using message_ptr = typename message::ptr;
 
     /// Get a message buffer with specified size
     /**
@@ -195,7 +195,7 @@ public:
 template <typename con_msg_manager>
 class endpoint_msg_manager {
 public:
-    typedef typename con_msg_manager::ptr con_msg_man_ptr;
+    using con_msg_man_ptr = typename con_msg_manager::ptr;
 
     /// Get a pointer to a connection message manager
     /**

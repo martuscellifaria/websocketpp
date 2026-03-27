@@ -56,8 +56,8 @@ namespace parser {
  */
 class response : public parser {
 public:
-    typedef response type;
-    typedef std::shared_ptr<type> ptr;
+    using type = response;
+    using ptr = std::shared_ptr<type>;
 
     response()
       : m_read(0)

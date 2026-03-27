@@ -37,8 +37,8 @@ namespace concurrency {
 /// Concurrency policy that uses std::mutex / boost::mutex
 class basic {
 public:
-    typedef std::mutex mutex_type;
-    typedef std::lock_guard<mutex_type> scoped_lock_type;
+    using mutex_type = std::mutex;
+    using scoped_lock_type = std::lock_guard<mutex_type>;
 };
 
 } // namespace concurrency

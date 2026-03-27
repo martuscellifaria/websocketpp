@@ -55,22 +55,22 @@ template <typename config>
 class connection : public std::enable_shared_from_this< connection<config> > {
 public:
     /// Type of this connection transport component
-    typedef connection<config> type;
+    using type = connection<config>;
     /// Type of a shared pointer to this connection transport component
-    typedef std::shared_ptr<type> ptr;
+    using ptr = std::shared_ptr<type>;
 
     /// transport concurrency policy
-    typedef typename config::concurrency_type concurrency_type;
+    using concurrency_type = typename config::concurrency_type;
     /// Type of this transport's access logging policy
-    typedef typename config::alog_type alog_type;
+    using alog_type = typename config::alog_type;
     /// Type of this transport's error logging policy
-    typedef typename config::elog_type elog_type;
+    using elog_type = typename config::elog_type;
 
     // Concurrency policy types
-    typedef typename concurrency_type::scoped_lock_type scoped_lock_type;
-    typedef typename concurrency_type::mutex_type mutex_type;
+    using scoped_lock_type = typename concurrency_type::scoped_lock_type;
+    using mutex_type = typename concurrency_type::mutex_type;
 
-    typedef std::shared_ptr<timer> timer_ptr;
+    using timer_ptr = std::shared_ptr<timer>;
 
     explicit connection(bool is_server, const std::shared_ptr<alog_type> & alog, const std::shared_ptr<elog_type> & elog)
       : m_alog(alog), m_elog(elog)

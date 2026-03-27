@@ -47,25 +47,25 @@ template <typename config>
 class client : public endpoint<connection<config>,config> {
 public:
     /// Type of this endpoint
-    typedef client<config> type;
+    using type = client<config>;
 
     /// Type of the endpoint concurrency component
-    typedef typename config::concurrency_type concurrency_type;
+    using concurrency_type = typename config::concurrency_type;
     /// Type of the endpoint transport component
-    typedef typename config::transport_type transport_type;
+    using transport_type = typename config::transport_type;
 
     /// Type of the connections this server will create
-    typedef connection<config> connection_type;
+    using connection_type = connection<config>;
     /// Type of a shared pointer to the connections this server will create
-    typedef typename connection_type::ptr connection_ptr;
+    using connection_ptr = typename connection_type::ptr;
 
     /// Type of the connection transport component
-    typedef typename transport_type::transport_con_type transport_con_type;
+    using transport_con_type = typename transport_type::transport_con_type;
     /// Type of a shared pointer to the connection transport component
-    typedef typename transport_con_type::ptr transport_con_ptr;
+    using transport_con_ptr = typename transport_con_type::ptr;
 
     /// Type of the endpoint component of this server
-    typedef endpoint<connection_type,config> endpoint_type;
+    using endpoint_type = endpoint<connection_type,config>;
 
     friend class connection<config>;
 

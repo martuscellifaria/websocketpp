@@ -41,7 +41,7 @@ namespace config {
  *
  * @since 0.4.0-dev
  */
-typedef minimal_server minimal_client;
+using minimal_client = minimal_server;
 
 } // namespace config
 } // namespace websocketpp

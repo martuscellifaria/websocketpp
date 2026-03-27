@@ -49,8 +49,8 @@ namespace parser {
  */
 class request : public parser {
 public:
-    typedef request type;
-    typedef std::shared_ptr<type> ptr;
+    using type = request;
+    using ptr = std::shared_ptr<type>;
 
     request()
       : m_buf(std::make_shared<std::string>())

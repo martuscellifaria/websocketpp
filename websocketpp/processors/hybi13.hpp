@@ -53,21 +53,21 @@ namespace processor {
 template <typename config>
 class hybi13 : public processor<config> {
 public:
-    typedef processor<config> base;
+    using base = processor<config>;
 
-    typedef typename config::request_type request_type;
-    typedef typename config::response_type response_type;
+    using request_type = typename config::request_type;
+    using response_type = typename config::response_type;
 
-    typedef typename config::message_type message_type;
-    typedef typename message_type::ptr message_ptr;
+    using message_type = typename config::message_type;
+    using message_ptr = typename message_type::ptr;
 
-    typedef typename config::con_msg_manager_type msg_manager_type;
-    typedef typename msg_manager_type::ptr msg_manager_ptr;
-    typedef typename config::rng_type rng_type;
+    using msg_manager_type = typename config::con_msg_manager_type;
+    using msg_manager_ptr = typename msg_manager_type::ptr;
+    using rng_type = typename config::rng_type;
 
-    typedef typename config::permessage_deflate_type permessage_deflate_type;
+    using permessage_deflate_type = typename config::permessage_deflate_type;
 
-    typedef std::pair<std::error_code,std::string> err_str_pair;
+    using err_str_pair = std::pair<std::error_code,std::string>;
 
     explicit hybi13(bool secure, bool p_is_server, msg_manager_ptr manager, rng_type& rng)
       : processor<config>(secure, p_is_server)

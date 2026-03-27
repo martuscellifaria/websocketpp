@@ -45,7 +45,7 @@ namespace http {
  * The attribute list is an unordered key/value map. Encoded attribute
  * values are delimited by semicolons.
  */
-typedef std::map<std::string,std::string> attribute_list;
+using attribute_list = std::map<std::string,std::string>;
 
 /// The type of an HTTP parameter list
 /**
@@ -53,7 +53,7 @@ typedef std::map<std::string,std::string> attribute_list;
  * associated attribute list. Encoded parameter values are delimited by
  * commas.
  */
-typedef std::vector< std::pair<std::string,attribute_list> > parameter_list;
+using parameter_list = std::vector< std::pair<std::string,attribute_list> >;
 
 /// Literal value of the HTTP header delimiter
 static char const header_delimiter[] = "\r\n";

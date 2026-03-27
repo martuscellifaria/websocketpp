@@ -63,7 +63,7 @@ public:
     /**
      * std::mutex is an example.
      */
-    typedef none_impl::fake_mutex mutex_type;
+    using mutex_type = none_impl::fake_mutex;
 
     /// The type of a scoped/RAII lock primitive.
     /**
@@ -71,7 +71,7 @@ public:
      * acquire that lock, and release it in its destructor. std::lock_guard is
      * an example.
      */
-    typedef none_impl::fake_lock_guard scoped_lock_type;
+    using scoped_lock_type = none_impl::fake_lock_guard;
 };
 
 } // namespace concurrency

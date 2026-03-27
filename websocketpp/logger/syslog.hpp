@@ -47,7 +47,7 @@ namespace log {
 template <typename concurrency, typename names>
 class syslog : public basic<concurrency, names> {
 public:
-    typedef basic<concurrency, names> base;
+    using base = basic<concurrency, names>;
 
     /// Construct the logger
     /**
@@ -87,7 +87,7 @@ public:
             names::channel_name(channel), msg);
     }
 private:
-    typedef typename base::scoped_lock_type scoped_lock_type;
+    using scoped_lock_type = typename base::scoped_lock_type;
 
     /// The default level is used for all access logs and any error logs that
     /// don't trivially map to one of the standard syslog levels.

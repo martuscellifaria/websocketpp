@@ -52,7 +52,7 @@ namespace permessage_deflate {
  */
 template <typename config>
 class disabled {
-    typedef std::pair<std::error_code,std::string> err_str_pair;
+    using err_str_pair = std::pair<std::error_code,std::string>;
 
 public:
     /// Negotiate extension

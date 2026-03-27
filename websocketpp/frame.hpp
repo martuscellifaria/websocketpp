@@ -183,7 +183,7 @@ static uint8_t const BHB1_MASK = 0x80;
 static uint8_t const payload_size_code_16bit = 0x7E; // 126
 static uint8_t const payload_size_code_64bit = 0x7F; // 127
 
-typedef uint32_converter masking_key_type;
+using masking_key_type = uint32_converter;
 
 /// The constant size component of a WebSocket frame header
 struct basic_header {

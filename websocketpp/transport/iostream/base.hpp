@@ -44,8 +44,7 @@ namespace transport {
 namespace iostream {
 
 /// The type and signature of the callback used by iostream transport to write
-typedef std::function<std::error_code(connection_hdl, char const *, size_t)>
-    write_handler;
+using write_handler = std::function<std::error_code(connection_hdl, char const *, size_t)>;
 
 /// The type and signature of the callback used by iostream transport to perform
 /// vectored writes.
@@ -53,12 +52,12 @@ typedef std::function<std::error_code(connection_hdl, char const *, size_t)>
  * If a vectored write handler is not set the standard write handler will be
  * called multiple times.
  */
-typedef std::function<std::error_code(connection_hdl, std::vector<transport::buffer> const
-    & bufs)> vector_write_handler;
+using vector_write_handler = std::function<std::error_code(connection_hdl, std::vector<transport::buffer> const
+    & bufs)>;
 
 /// The type and signature of the callback used by iostream transport to signal
 /// a transport shutdown.
-typedef std::function<std::error_code(connection_hdl)> shutdown_handler;
+using shutdown_handler = std::function<std::error_code(connection_hdl)>;
 
 /// iostream transport errors
 namespace error {

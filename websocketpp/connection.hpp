@@ -55,7 +55,7 @@ namespace websocketpp {
  * upgrade the connection to the WebSocket protocol will trigger the http
  * handler instead of fail/open.
  */
-typedef std::function<void(connection_hdl)> open_handler;
+using open_handler = std::function<void(connection_hdl)>;
 
 /// The type and function signature of a close handler
 /**
@@ -65,7 +65,7 @@ typedef std::function<void(connection_hdl)> open_handler;
  * The close handler will be called exactly once for every connection for which
  * the open handler was called.
  */
-typedef std::function<void(connection_hdl)> close_handler;
+using close_handler = std::function<void(connection_hdl)>;
 
 /// The type and function signature of a fail handler
 /**
@@ -75,7 +75,7 @@ typedef std::function<void(connection_hdl)> close_handler;
  * upgrade the connection to the WebSocket protocol will trigger the http
  * handler instead of fail/open.
  */
-typedef std::function<void(connection_hdl)> fail_handler;
+using fail_handler = std::function<void(connection_hdl)>;
 
 /// The type and function signature of an interrupt handler
 /**
@@ -87,7 +87,7 @@ typedef std::function<void(connection_hdl)> fail_handler;
  * This is typically used by another application thread to schedule some tasks
  * that can only be run from within the handler chain for thread safety reasons.
  */
-typedef std::function<void(connection_hdl)> interrupt_handler;
+using interrupt_handler = std::function<void(connection_hdl)>;
 
 /// The type and function signature of a ping handler
 /**
@@ -97,7 +97,7 @@ typedef std::function<void(connection_hdl)> interrupt_handler;
  * true if a pong response should be sent, false if the pong response should be
  * suppressed.
  */
-typedef std::function<bool(connection_hdl,std::string)> ping_handler;
+using ping_handler = std::function<bool(connection_hdl,std::string)>;
 
 /// The type and function signature of a pong handler
 /**
@@ -105,14 +105,14 @@ typedef std::function<bool(connection_hdl,std::string)> ping_handler;
  * control frame. The string argument contains the pong payload. The payload is
  * a binary string up to 126 bytes in length.
  */
-typedef std::function<void(connection_hdl,std::string)> pong_handler;
+using pong_handler = std::function<void(connection_hdl,std::string)>;
 
 /// The type and function signature of a pong timeout handler
 /**
  * The pong timeout handler is called when a ping goes unanswered by a pong for
  * longer than the locally specified timeout period.
  */
-typedef std::function<void(connection_hdl,std::string)> pong_timeout_handler;
+using pong_timeout_handler = std::function<void(connection_hdl,std::string)>;
 
 /// The type and function signature of a validate handler
 /**
@@ -125,7 +125,7 @@ typedef std::function<void(connection_hdl,std::string)> pong_timeout_handler;
  * should be accepted. Additional methods may be called during the function to
  * set response headers, set HTTP return/error codes, etc.
  */
-typedef std::function<bool(connection_hdl)> validate_handler;
+using validate_handler = std::function<bool(connection_hdl)>;
 
 /// The type and function signature of a http handler
 /**
@@ -147,11 +147,11 @@ typedef std::function<bool(connection_hdl)> validate_handler;
  * handlers may override the response status code to deliver any type of
  * response.
  */
-typedef std::function<void(connection_hdl)> http_handler;
+using http_handler = std::function<void(connection_hdl)>;
 
 //
-typedef std::function<void(std::error_code const & ec, size_t bytes_transferred)> read_handler;
-typedef std::function<void(std::error_code const & ec)> write_frame_handler;
+using read_handler = std::function<void(std::error_code const & ec, size_t bytes_transferred)>;
+using write_frame_handler = std::function<void(std::error_code const & ec)>;
 
 static std::vector<int> const versions_supported = {0,7,8,13};
 
@@ -220,53 +220,52 @@ class connection
 {
 public:
     /// Type of this connection
-    typedef connection<config> type;
+    using type = connection<config>;
     /// Type of a shared pointer to this connection
-    typedef std::shared_ptr<type> ptr;
+    using ptr = std::shared_ptr<type>;
     /// Type of a weak pointer to this connection
-    typedef std::weak_ptr<type> weak_ptr;
+    using weak_ptr = std::weak_ptr<type>;
 
     /// Type of the concurrency component of this connection
-    typedef typename config::concurrency_type concurrency_type;
+    using concurrency_type = typename config::concurrency_type;
     /// Type of the access logging policy
-    typedef typename config::alog_type alog_type;
+    using alog_type = typename config::alog_type;
     /// Type of the error logging policy
-    typedef typename config::elog_type elog_type;
+    using elog_type = typename config::elog_type;
 
     /// Type of the transport component of this connection
-    typedef typename config::transport_type::transport_con_type
-        transport_con_type;
+    using transport_con_type = typename config::transport_type::transport_con_type;
     /// Type of a shared pointer to the transport component of this connection
-    typedef typename transport_con_type::ptr transport_con_ptr;
+    using transport_con_ptr = typename transport_con_type::ptr;
 
-    typedef std::function<void(ptr)> termination_handler;
+    using termination_handler = std::function<void(ptr)>;
 
-    typedef typename concurrency_type::scoped_lock_type scoped_lock_type;
-    typedef typename concurrency_type::mutex_type mutex_type;
+    using scoped_lock_type = typename concurrency_type::scoped_lock_type;
+    using mutex_type = typename concurrency_type::mutex_type;
 
-    typedef typename config::request_type request_type;
-    typedef typename config::response_type response_type;
+    using request_type = typename config::request_type;
+    using response_type = typename config::response_type;
 
-    typedef typename config::message_type message_type;
-    typedef typename message_type::ptr message_ptr;
+    using message_type = typename config::message_type;
+    using message_ptr = typename message_type::ptr;
 
-    typedef typename config::con_msg_manager_type con_msg_manager_type;
-    typedef typename con_msg_manager_type::ptr con_msg_manager_ptr;
+    using con_msg_manager_type = typename config::con_msg_manager_type;
+    using con_msg_manager_ptr = typename con_msg_manager_type::ptr;
 
     /// Type of RNG
-    typedef typename config::rng_type rng_type;
+    using rng_type = typename config::rng_type;
 
-    typedef processor::processor<config> processor_type;
-    typedef std::shared_ptr<processor_type> processor_ptr;
+    using processor_type = processor::processor<config>;
+    using processor_ptr = std::shared_ptr<processor_type>;
 
     // Message handler (needs to know message type)
-    typedef std::function<void(connection_hdl,message_ptr)> message_handler;
+    using message_handler = std::function<void(connection_hdl,message_ptr)>;
 
     /// Type of a pointer to a transport timer handle
-    typedef typename transport_con_type::timer_ptr timer_ptr;
+    using timer_ptr = typename transport_con_type::timer_ptr;
 
     // Misc Convenience Types
-    typedef session::internal_state::value istate_type;
+    using istate_type = session::internal_state::value;
 
 private:
     enum terminate_status {

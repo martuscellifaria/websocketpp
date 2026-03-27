@@ -56,7 +56,7 @@ namespace websocketpp
 namespace transport {
 namespace asio {
 
-typedef std::function<void(connection_hdl)> tcp_init_handler;
+using tcp_init_handler = std::function<void(connection_hdl)>;
 
 /// Asio based connection transport component
 /**
@@ -68,30 +68,30 @@ template <typename config>
 class connection : public config::socket_type::socket_con_type {
 public:
     /// Type of this connection transport component
-    typedef connection<config> type;
+    using type = connection<config>;
     /// Type of a shared pointer to this connection transport component
-    typedef std::shared_ptr<type> ptr;
+    using ptr = std::shared_ptr<type>;
 
     /// Type of the socket connection component
-    typedef typename config::socket_type::socket_con_type socket_con_type;
+    using socket_con_type = typename config::socket_type::socket_con_type;
     /// Type of a shared pointer to the socket connection component
-    typedef typename socket_con_type::ptr socket_con_ptr;
+    using socket_con_ptr = typename socket_con_type::ptr;
     /// Type of this transport's access logging policy
-    typedef typename config::alog_type alog_type;
+    using alog_type = typename config::alog_type;
     /// Type of this transport's error logging policy
-    typedef typename config::elog_type elog_type;
+    using elog_type = typename config::elog_type;
 
-    typedef typename config::request_type request_type;
-    typedef typename request_type::ptr request_ptr;
-    typedef typename config::response_type response_type;
-    typedef typename response_type::ptr response_ptr;
+    using request_type = typename config::request_type;
+    using request_ptr = typename request_type::ptr;
+    using response_type = typename config::response_type;
+    using response_ptr = typename response_type::ptr;
 
     /// Type of a pointer to the Asio io_service being used
-    typedef lib::asio::io_context* io_service_ptr;
+    using io_service_ptr = lib::asio::io_context*;
     /// Type of a pointer to the Asio io_service::strand being used
-    typedef std::shared_ptr<lib::asio::io_context::strand> strand_ptr;
+    using strand_ptr = std::shared_ptr<lib::asio::io_context::strand>;
     /// Type of a pointer to the Asio timer class
-    typedef std::shared_ptr<lib::asio::steady_timer> timer_ptr;
+    using timer_ptr = std::shared_ptr<lib::asio::steady_timer>;
     using clk = std::chrono::steady_clock;
 
     // connection is friends with its associated endpoint to allow the endpoint

@@ -139,13 +139,11 @@ inline custom_alloc_handler<Handler> make_custom_alloc_handler(
 template <typename config>
 class endpoint;
 
-typedef std::function<void (lib::asio::error_code const & ec,
-    size_t bytes_transferred)> async_read_handler;
+using async_read_handler = std::function<void (lib::asio::error_code const & ec,size_t bytes_transferred)>;
 
-typedef std::function<void (lib::asio::error_code const & ec,
-    size_t bytes_transferred)> async_write_handler;
+using async_write_handler = std::function<void (lib::asio::error_code const & ec,size_t bytes_transferred)>;
 
-typedef std::function<void (std::error_code const & ec)> pre_init_handler;
+using pre_init_handler = std::function<void (std::error_code const & ec)>;
 
 // handle_timer: dynamic parameters, multiple copies
 // handle_proxy_write

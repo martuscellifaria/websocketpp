@@ -38,7 +38,7 @@
 namespace websocketpp {
 
 /// Combination error code / string type for returning two values
-typedef std::pair<std::error_code,std::string> err_str_pair;
+using err_str_pair = std::pair<std::error_code,std::string>;
 
 /// Library level error codes
 namespace error {

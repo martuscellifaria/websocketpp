@@ -114,25 +114,25 @@ namespace websocketpp {
 namespace transport {
 
 /// The type and signature of the callback passed to the init hook
-typedef std::function<void(std::error_code const &)> init_handler;
+using init_handler = std::function<void(std::error_code const &)>;
 
 /// The type and signature of the callback passed to the read method
-typedef std::function<void(std::error_code const &,size_t)> read_handler;
+using read_handler = std::function<void(std::error_code const &,size_t)>;
 
 /// The type and signature of the callback passed to the write method
-typedef std::function<void(std::error_code const &)> write_handler;
+using write_handler = std::function<void(std::error_code const &)>;
 
 /// The type and signature of the callback passed to the read method
-typedef std::function<void(std::error_code const &)> timer_handler;
+using timer_handler = std::function<void(std::error_code const &)>;
 
 /// The type and signature of the callback passed to the shutdown method
-typedef std::function<void(std::error_code const &)> shutdown_handler;
+using shutdown_handler = std::function<void(std::error_code const &)>;
 
 /// The type and signature of the callback passed to the interrupt method
-typedef std::function<void()> interrupt_handler;
+using interrupt_handler = std::function<void()>;
 
 /// The type and signature of the callback passed to the dispatch method
-typedef std::function<void()> dispatch_handler;
+using dispatch_handler = std::function<void()>;
 
 /// A simple utility buffer class
 struct buffer {

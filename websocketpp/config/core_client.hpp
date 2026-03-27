@@ -70,36 +70,30 @@ namespace config {
 
 /// Client config with iostream transport
 struct core_client {
-    typedef core_client type;
+    using type = core_client;
 
     // Concurrency policy
 #ifndef _WEBSOCKETPP_NO_THREADING_
-    typedef websocketpp::concurrency::basic concurrency_type;
+    using concurrency_type = websocketpp::concurrency::basic;
 #else
-    typedef websocketpp::concurrency::none concurrency_type;
+    using concurrency_type = websocketpp::concurrency::none;
 #endif
 
     // HTTP Parser Policies
-    typedef http::parser::request request_type;
-    typedef http::parser::response response_type;
+    using request_type = http::parser::request;
+    using response_type = http::parser::response;
 
     // Message Policies
-    typedef message_buffer::message<message_buffer::alloc::con_msg_manager>
-        message_type;
-    typedef message_buffer::alloc::con_msg_manager<message_type>
-        con_msg_manager_type;
-    typedef message_buffer::alloc::endpoint_msg_manager<con_msg_manager_type>
-        endpoint_msg_manager_type;
+    using message_type = message_buffer::message<message_buffer::alloc::con_msg_manager>;
+    using con_msg_manager_type = message_buffer::alloc::con_msg_manager<message_type>;
+    using endpoint_msg_manager_type = message_buffer::alloc::endpoint_msg_manager<con_msg_manager_type>;
 
     /// Logging policies
-    typedef websocketpp::log::basic<concurrency_type,
-        websocketpp::log::elevel> elog_type;
-    typedef websocketpp::log::basic<concurrency_type,
-        websocketpp::log::alevel> alog_type;
+    using elog_type = websocketpp::log::basic<concurrency_type,websocketpp::log::elevel>;
+    using alog_type = websocketpp::log::basic<concurrency_type,websocketpp::log::alevel>;
 
     /// RNG policies
-    typedef websocketpp::random::random_device::int_generator<uint32_t,
-        concurrency_type> rng_type;
+    using rng_type = websocketpp::random::random_device::int_generator<uint32_t,concurrency_type>;
 
     /// Controls compile time enabling/disabling of thread syncronization code
     /// Disabling can provide a minor performance improvement to single threaded
@@ -107,11 +101,11 @@ struct core_client {
     static bool const enable_multithreading = true;
 
     struct transport_config {
-        typedef type::concurrency_type concurrency_type;
-        typedef type::elog_type elog_type;
-        typedef type::alog_type alog_type;
-        typedef type::request_type request_type;
-        typedef type::response_type response_type;
+        using concurrency_type = type::concurrency_type;
+        using elog_type = type::elog_type;
+        using alog_type = type::alog_type;
+        using request_type = type::request_type;
+        using response_type = type::response_type;
 
         /// Controls compile time enabling/disabling of thread syncronization
         /// code Disabling can provide a minor performance improvement to single
@@ -147,13 +141,12 @@ struct core_client {
     };
 
     /// Transport Endpoint Component
-    typedef websocketpp::transport::iostream::endpoint<transport_config>
-        transport_type;
+    using transport_type = websocketpp::transport::iostream::endpoint<transport_config>;
 
     /// User overridable Endpoint base class
-    typedef websocketpp::endpoint_base endpoint_base;
+    using endpoint_base = websocketpp::endpoint_base;
     /// User overridable Connection base class
-    typedef websocketpp::connection_base connection_base;
+    using connection_base = websocketpp::connection_base;
 
     /// Default timer values (in ms)
 
@@ -256,7 +249,7 @@ struct core_client {
 
     /// permessage_deflate extension
     struct permessage_deflate_config {
-        typedef core_client::request_type request_type;
+        using request_type = core_client::request_type;
 
         /// If the remote endpoint requests that we reset the compression
         /// context after each message should we honor the request?
@@ -270,8 +263,7 @@ struct core_client {
         static const uint8_t minimum_outgoing_window_bits = 8;
     };
 
-    typedef websocketpp::extensions::permessage_deflate::disabled
-        <permessage_deflate_config> permessage_deflate_type;
+    using permessage_deflate_type = websocketpp::extensions::permessage_deflate::disabled<permessage_deflate_config>;
 
     /// Autonegotiate permessage-compress
     /**

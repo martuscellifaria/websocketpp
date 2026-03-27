@@ -47,8 +47,7 @@ namespace asio {
 namespace basic_socket {
 
 /// The signature of the socket init handler for this socket policy
-typedef std::function<void(connection_hdl,lib::asio::ip::tcp::socket&)>
-    socket_init_handler;
+using socket_init_handler = std::function<void(connection_hdl,lib::asio::ip::tcp::socket&)>;
 
 /// Basic Asio connection socket component
 /**
@@ -58,18 +57,18 @@ typedef std::function<void(connection_hdl,lib::asio::ip::tcp::socket&)>
 class connection : public std::enable_shared_from_this<connection> {
 public:
     /// Type of this connection socket component
-    typedef connection type;
+    using type = connection;
     /// Type of a shared pointer to this connection socket component
-    typedef std::shared_ptr<type> ptr;
+    using ptr = std::shared_ptr<type>;
 
     /// Type of a pointer to the Asio io_service being used
-    typedef lib::asio::io_context* io_service_ptr;
+    using io_service_ptr = lib::asio::io_context*;
     /// Type of a pointer to the Asio io_service strand being used
-    typedef std::shared_ptr<lib::asio::io_context::strand> strand_ptr;
+    using strand_ptr = std::shared_ptr<lib::asio::io_context::strand>;
     /// Type of the ASIO socket being used
-    typedef lib::asio::ip::tcp::socket socket_type;
+    using socket_type = lib::asio::ip::tcp::socket;
     /// Type of a shared pointer to the socket being used.
-    typedef std::shared_ptr<socket_type> socket_ptr;
+    using socket_ptr = std::shared_ptr<socket_type>;
 
     explicit connection() : m_state(UNINITIALIZED) {
         //std::cout << "transport::asio::basic_socket::connection constructor"
@@ -311,13 +310,13 @@ private:
 class endpoint {
 public:
     /// The type of this endpoint socket component
-    typedef endpoint type;
+    using type = endpoint;
 
     /// The type of the corresponding connection socket component
-    typedef connection socket_con_type;
+    using socket_con_type = connection;
     /// The type of a shared pointer to the corresponding connection socket
     /// component.
-    typedef socket_con_type::ptr socket_con_ptr;
+    using socket_con_ptr = socket_con_type::ptr;
 
     explicit endpoint() {}
 

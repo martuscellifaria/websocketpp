@@ -46,7 +46,7 @@ namespace close {
 /// A package of types and methods for manipulating WebSocket close status'
 namespace status {
     /// The type of a close code value.
-    typedef uint16_t value;
+    using value = uint16_t;
 
     /// A blank value for internal use.
     static value const blank = 0;

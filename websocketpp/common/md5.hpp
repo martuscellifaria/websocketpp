@@ -74,15 +74,15 @@ namespace websocketpp {
 /// Provides MD5 hashing functionality
 namespace md5 {
 
-typedef unsigned char md5_byte_t; /* 8-bit byte */
-typedef unsigned int md5_word_t; /* 32-bit word */
+using md5_byte_t = unsigned char; /* 8-bit byte */
+using md5_word_t = unsigned int; /* 32-bit word */
 
 /* Define the state of the MD5 Algorithm. */
-typedef struct md5_state_s {
+using md5_state_t = struct md5_state_s {
     md5_word_t count[2];    /* message length in bits, lsw first */
     md5_word_t abcd[4];     /* digest buffer */
     md5_byte_t buf[64];     /* accumulate block */
-} md5_state_t;
+};
 
 /* Initialize the algorithm. */
 inline void md5_init(md5_state_t *pms);

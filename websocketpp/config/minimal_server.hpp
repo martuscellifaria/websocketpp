@@ -77,29 +77,26 @@ namespace config {
  * @since 0.4.0-dev
  */
 struct minimal_server {
-    typedef minimal_server type;
+    using type = minimal_server;
 
     // Concurrency policy
-    typedef websocketpp::concurrency::none concurrency_type;
+    using concurrency_type = websocketpp::concurrency::none;
 
     // HTTP Parser Policies
-    typedef http::parser::request request_type;
-    typedef http::parser::response response_type;
+    using request_type = http::parser::request;
+    using response_type = http::parser::response;
 
     // Message Policies
-    typedef message_buffer::message<message_buffer::alloc::con_msg_manager>
-        message_type;
-    typedef message_buffer::alloc::con_msg_manager<message_type>
-        con_msg_manager_type;
-    typedef message_buffer::alloc::endpoint_msg_manager<con_msg_manager_type>
-        endpoint_msg_manager_type;
+    using message_type = message_buffer::message<message_buffer::alloc::con_msg_manager>;
+    using con_msg_manager_type = message_buffer::alloc::con_msg_manager<message_type>;
+    using endpoint_msg_manager_type = message_buffer::alloc::endpoint_msg_manager<con_msg_manager_type>;
 
     /// Logging policies
-    typedef websocketpp::log::stub elog_type;
-    typedef websocketpp::log::stub alog_type;
+    using elog_type = websocketpp::log::stub;
+    using alog_type = websocketpp::log::stub;
 
     /// RNG policies
-    typedef websocketpp::random::none::int_generator<uint32_t> rng_type;
+    using rng_type = websocketpp::random::none::int_generator<uint32_t>;
 
     /// Controls compile time enabling/disabling of thread syncronization
     /// code Disabling can provide a minor performance improvement to single
@@ -107,11 +104,11 @@ struct minimal_server {
     static bool const enable_multithreading = true;
 
     struct transport_config {
-        typedef type::concurrency_type concurrency_type;
-        typedef type::elog_type elog_type;
-        typedef type::alog_type alog_type;
-        typedef type::request_type request_type;
-        typedef type::response_type response_type;
+        using concurrency_type = type::concurrency_type;
+        using elog_type = type::elog_type;
+        using alog_type = type::alog_type;
+        using request_type = type::request_type;
+        using response_type = type::response_type;
 
         /// Controls compile time enabling/disabling of thread syncronization
         /// code Disabling can provide a minor performance improvement to single
@@ -147,13 +144,12 @@ struct minimal_server {
     };
 
     /// Transport Endpoint Component
-    typedef websocketpp::transport::stub::endpoint<transport_config>
-        transport_type;
+    using transport_type = websocketpp::transport::stub::endpoint<transport_config>;
 
     /// User overridable Endpoint base class
-    typedef websocketpp::endpoint_base endpoint_base;
+    using endpoint_base = websocketpp::endpoint_base;
     /// User overridable Connection base class
-    typedef websocketpp::connection_base connection_base;
+    using connection_base = websocketpp::connection_base;
 
     /// Default timer values (in ms)
 
@@ -256,7 +252,7 @@ struct minimal_server {
 
     /// permessage_compress extension
     struct permessage_deflate_config {
-        typedef core::request_type request_type;
+        using request_type = core::request_type;
 
         /// If the remote endpoint requests that we reset the compression
         /// context after each message should we honor the request?
@@ -270,8 +266,7 @@ struct minimal_server {
         static const uint8_t minimum_outgoing_window_bits = 8;
     };
 
-    typedef websocketpp::extensions::permessage_deflate::disabled
-        <permessage_deflate_config> permessage_deflate_type;
+    using permessage_deflate_type = websocketpp::extensions::permessage_deflate::disabled<permessage_deflate_config>;
 
     /// Autonegotiate permessage-deflate
     /**

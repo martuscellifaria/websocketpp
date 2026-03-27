@@ -34,7 +34,7 @@ namespace websocketpp {
 namespace log {
 
 /// Type of a channel package
-typedef uint32_t level;
+using level = uint32_t;
 
 /// Package of values for hinting at the nature of a given logger.
 /**
@@ -45,7 +45,7 @@ typedef uint32_t level;
  */
 struct channel_type_hint {
     /// Type of a channel type hint value
-    typedef uint32_t value;
+    using value = uint32_t;
     
     /// No information
     static value const none = 0;

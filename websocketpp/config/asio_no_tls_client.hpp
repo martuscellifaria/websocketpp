@@ -36,35 +36,33 @@ namespace config {
 
 /// Client config with asio transport and TLS disabled
 struct asio_client : public core_client {
-    typedef asio_client type;
-    typedef core_client base;
+    using type = asio_client;
+    using base = core_client;
 
-    typedef base::concurrency_type concurrency_type;
+    using concurrency_type = base::concurrency_type;
 
-    typedef base::request_type request_type;
-    typedef base::response_type response_type;
+    using request_type = base::request_type;
+    using response_type = base::response_type;
 
-    typedef base::message_type message_type;
-    typedef base::con_msg_manager_type con_msg_manager_type;
-    typedef base::endpoint_msg_manager_type endpoint_msg_manager_type;
+    using message_type = base::message_type;
+    using con_msg_manager_type = base::con_msg_manager_type;
+    using endpoint_msg_manager_type = base::endpoint_msg_manager_type;
 
-    typedef base::alog_type alog_type;
-    typedef base::elog_type elog_type;
+    using alog_type = base::alog_type;
+    using elog_type = base::elog_type;
 
-    typedef base::rng_type rng_type;
+    using rng_type = base::rng_type;
 
     struct transport_config : public base::transport_config {
-        typedef type::concurrency_type concurrency_type;
-        typedef type::alog_type alog_type;
-        typedef type::elog_type elog_type;
-        typedef type::request_type request_type;
-        typedef type::response_type response_type;
-        typedef websocketpp::transport::asio::basic_socket::endpoint
-            socket_type;
+        using concurrency_type = type::concurrency_type;
+        using alog_type = type::alog_type;
+        using elog_type = type::elog_type;
+        using request_type = type::request_type;
+        using response_type = type::response_type;
+        using socket_type = websocketpp::transport::asio::basic_socket::endpoint;
     };
 
-    typedef websocketpp::transport::asio::endpoint<transport_config>
-        transport_type;
+    using transport_type = websocketpp::transport::asio::endpoint<transport_config>;
 };
 
 } // namespace config

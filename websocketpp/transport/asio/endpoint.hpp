@@ -52,44 +52,42 @@ template <typename config>
 class endpoint : public config::socket_type {
 public:
     /// Type of this endpoint transport component
-    typedef endpoint<config> type;
+    using type = endpoint<config>;
 
     /// Type of the concurrency policy
-    typedef typename config::concurrency_type concurrency_type;
+    using concurrency_type = typename config::concurrency_type;
     /// Type of the socket policy
-    typedef typename config::socket_type socket_type;
+    using socket_type = typename config::socket_type;
     /// Type of the error logging policy
-    typedef typename config::elog_type elog_type;
+    using elog_type = typename config::elog_type;
     /// Type of the access logging policy
-    typedef typename config::alog_type alog_type;
+    using alog_type = typename config::alog_type;
 
     /// Type of the socket connection component
-    typedef typename socket_type::socket_con_type socket_con_type;
+    using socket_con_type = typename socket_type::socket_con_type;
     /// Type of a shared pointer to the socket connection component
-    typedef typename socket_con_type::ptr socket_con_ptr;
+    using socket_con_ptr = typename socket_con_type::ptr;
 
     /// Type of the connection transport component associated with this
     /// endpoint transport component
-    typedef asio::connection<config> transport_con_type;
+    using transport_con_type = asio::connection<config>;
     /// Type of a shared pointer to the connection transport component
     /// associated with this endpoint transport component
-    typedef typename transport_con_type::ptr transport_con_ptr;
+    using transport_con_ptr = typename transport_con_type::ptr;
 
     /// Type of a pointer to the ASIO io_service being used
-    typedef lib::asio::io_context * io_service_ptr;
+    using io_service_ptr = lib::asio::io_context *;
     /// Type of a shared pointer to the acceptor being used
-    typedef std::shared_ptr<lib::asio::ip::tcp::acceptor> acceptor_ptr;
+    using acceptor_ptr = std::shared_ptr<lib::asio::ip::tcp::acceptor>;
     /// Type of a shared pointer to the resolver being used
-    typedef std::shared_ptr<lib::asio::ip::tcp::resolver> resolver_ptr;
+    using resolver_ptr = std::shared_ptr<lib::asio::ip::tcp::resolver>;
     /// Type of timer handle
-    typedef std::shared_ptr<lib::asio::steady_timer> timer_ptr;
+    using timer_ptr = std::shared_ptr<lib::asio::steady_timer>;
     /// Type of a shared pointer to an io_service work object
-    typedef std::shared_ptr<
-        lib::asio::executor_work_guard<lib::asio::io_context::executor_type>>
-        work_ptr;
+    using work_ptr = std::shared_ptr<lib::asio::executor_work_guard<lib::asio::io_context::executor_type>>;
 
     /// Type of socket pre-bind handler
-    typedef std::function<std::error_code(acceptor_ptr)> tcp_pre_bind_handler;
+    using tcp_pre_bind_handler = std::function<std::error_code(acceptor_ptr)>;
 
     using clk = std::chrono::steady_clock;
     // generate and manage our own io_service

@@ -159,11 +159,11 @@ uri_ptr get_uri_from_host(request_type & request, std::string scheme) {
 template <typename config>
 class processor {
 public:
-    typedef processor<config> type;
-    typedef typename config::request_type request_type;
-    typedef typename config::response_type response_type;
-    typedef typename config::message_type::ptr message_ptr;
-    typedef std::pair<std::error_code,std::string> err_str_pair;
+    using type = processor<config>;
+    using request_type = typename config::request_type;
+    using response_type = typename config::response_type;
+    using message_ptr = typename config::message_type::ptr;
+    using err_str_pair = std::pair<std::error_code,std::string>;
 
     explicit processor(bool secure, bool p_is_server)
       : m_secure(secure)

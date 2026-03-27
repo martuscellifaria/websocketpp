@@ -42,23 +42,23 @@ template <typename config>
 class endpoint {
 public:
     /// Type of this endpoint transport component
-    typedef endpoint type;
+    using type = endpoint;
     /// Type of a pointer to this endpoint transport component
-    typedef std::shared_ptr<type> ptr;
+    using ptr = std::shared_ptr<type>;
 
     /// Type of this endpoint's concurrency policy
-    typedef typename config::concurrency_type concurrency_type;
+    using concurrency_type = typename config::concurrency_type;
     /// Type of this endpoint's error logging policy
-    typedef typename config::elog_type elog_type;
+    using elog_type = typename config::elog_type;
     /// Type of this endpoint's access logging policy
-    typedef typename config::alog_type alog_type;
+    using alog_type = typename config::alog_type;
 
     /// Type of this endpoint transport component's associated connection
     /// transport component.
-    typedef debug::connection<config> transport_con_type;
+    using transport_con_type = debug::connection<config>;
     /// Type of a shared pointer to this endpoint transport component's
     /// associated connection transport component
-    typedef typename transport_con_type::ptr transport_con_ptr;
+    using transport_con_ptr = typename transport_con_type::ptr;
 
     // generate and manage our own io_service
     explicit endpoint()

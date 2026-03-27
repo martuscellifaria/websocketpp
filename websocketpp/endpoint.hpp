@@ -45,47 +45,47 @@ class endpoint : public config::transport_type, public config::endpoint_base {
 public:
     // Import appropriate types from our helper class
     // See endpoint_types for more details.
-    typedef endpoint<connection,config> type;
+    using type = endpoint<connection,config>;
 
     /// Type of the transport component of this endpoint
-    typedef typename config::transport_type transport_type;
+    using transport_type = typename config::transport_type;
     /// Type of the concurrency component of this endpoint
-    typedef typename config::concurrency_type concurrency_type;
+    using concurrency_type = typename config::concurrency_type;
 
     /// Type of the connections that this endpoint creates
-    typedef connection connection_type;
+    using connection_type = connection;
     /// Shared pointer to connection_type
-    typedef typename connection_type::ptr connection_ptr;
+    using connection_ptr = typename connection_type::ptr;
     /// Weak pointer to connection type
-    typedef typename connection_type::weak_ptr connection_weak_ptr;
+    using connection_weak_ptr = typename connection_type::weak_ptr;
 
     /// Type of the transport component of the connections that this endpoint
     /// creates
-    typedef typename transport_type::transport_con_type transport_con_type;
+    using transport_con_type = typename transport_type::transport_con_type;
     /// Type of a shared pointer to the transport component of the connections
     /// that this endpoint creates.
-    typedef typename transport_con_type::ptr transport_con_ptr;
+    using transport_con_ptr = typename transport_con_type::ptr;
 
     /// Type of message_handler
-    typedef typename connection_type::message_handler message_handler;
+    using message_handler = typename connection_type::message_handler;
     /// Type of message pointers that this endpoint uses
-    typedef typename connection_type::message_ptr message_ptr;
+    using message_ptr = typename connection_type::message_ptr;
 
     /// Type of error logger
-    typedef typename config::elog_type elog_type;
+    using elog_type = typename config::elog_type;
     /// Type of access logger
-    typedef typename config::alog_type alog_type;
+    using alog_type = typename config::alog_type;
 
     /// Type of our concurrency policy's scoped lock object
-    typedef typename concurrency_type::scoped_lock_type scoped_lock_type;
+    using scoped_lock_type = typename concurrency_type::scoped_lock_type;
     /// Type of our concurrency policy's mutex object
-    typedef typename concurrency_type::mutex_type mutex_type;
+    using mutex_type = typename concurrency_type::mutex_type;
 
     /// Type of RNG
-    typedef typename config::rng_type rng_type;
+    using rng_type = typename config::rng_type;
 
     // TODO: organize these
-    typedef typename connection_type::termination_handler termination_handler;
+    using termination_handler = typename connection_type::termination_handler;
 
     // This would be ideal. Requires C++11 though
     //friend connection;

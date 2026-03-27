@@ -154,8 +154,8 @@ public:
     }
 
 protected:
-    typedef typename concurrency::scoped_lock_type scoped_lock_type;
-    typedef typename concurrency::mutex_type mutex_type;
+    using scoped_lock_type = typename concurrency::scoped_lock_type;
+    using mutex_type = typename concurrency::mutex_type;
     mutex_type m_lock;
 
 private:

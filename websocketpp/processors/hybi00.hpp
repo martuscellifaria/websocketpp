@@ -53,15 +53,15 @@ namespace processor {
 template <typename config>
 class hybi00 : public processor<config> {
 public:
-    typedef processor<config> base;
+    using base = processor<config>;
 
-    typedef typename config::request_type request_type;
-    typedef typename config::response_type response_type;
+    using request_type = typename config::request_type;
+    using response_type = typename config::response_type;
 
-    typedef typename config::message_type message_type;
-    typedef typename message_type::ptr message_ptr;
+    using message_type = typename config::message_type;
+    using message_ptr = typename message_type::ptr;
 
-    typedef typename config::con_msg_manager_type::ptr msg_manager_ptr;
+    using msg_manager_ptr = typename config::con_msg_manager_type::ptr;
 
     explicit hybi00(bool secure, bool p_is_server, msg_manager_ptr manager)
       : processor<config>(secure, p_is_server)

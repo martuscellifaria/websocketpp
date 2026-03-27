@@ -42,11 +42,11 @@ class con_msg_manager
   : public std::enable_shared_from_this<con_msg_manager<message> >
 {
 public:
-    typedef con_msg_manager<message> type;
-    typedef std::shared_ptr<con_msg_manager> ptr;
-    typedef std::weak_ptr<con_msg_manager> weak_ptr;
+    using type = con_msg_manager<message>;
+    using ptr = std::shared_ptr<con_msg_manager>;
+    using weak_ptr = std::weak_ptr<con_msg_manager>;
 
-    typedef typename message::ptr message_ptr;
+    using message_ptr = typename message::ptr;
 
     /// Get an empty message buffer
     /**
@@ -87,7 +87,7 @@ public:
 template <typename con_msg_manager>
 class endpoint_msg_manager {
 public:
-    typedef typename con_msg_manager::ptr con_msg_man_ptr;
+    using con_msg_man_ptr = typename con_msg_manager::ptr;
 
     /// Get a pointer to a connection message manager
     /**

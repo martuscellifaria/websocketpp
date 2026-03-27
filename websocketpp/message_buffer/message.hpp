@@ -83,11 +83,11 @@ namespace message_buffer {
 template <template<class> class con_msg_manager>
 class message {
 public:
-    typedef std::shared_ptr<message> ptr;
+    using ptr = std::shared_ptr<message>;
 
-    typedef con_msg_manager<message> con_msg_man_type;
-    typedef typename con_msg_man_type::ptr con_msg_man_ptr;
-    typedef typename con_msg_man_type::weak_ptr con_msg_man_weak_ptr;
+    using con_msg_man_type = con_msg_manager<message>;
+    using con_msg_man_ptr = typename con_msg_man_type::ptr;
+    using con_msg_man_weak_ptr = typename con_msg_man_type::weak_ptr;
 
     /// Construct an empty message
     /**
